@@ -11,12 +11,11 @@ public class User : AuditableEntity
     public bool Confirmed { get; private set; }
 
     public Role? Role { get; private set; }
-    
+
     private User(
-        int id, string email, string name, string surname, 
+        int id, string email, string name, string surname,
         string? fathersName, int roleId, bool confirmed,
-        DateTime createdAt, DateTime? updatedAt,
-        int createdBy, int? changedBy)
+        DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         Id = id;
         Email = email;
@@ -33,29 +32,30 @@ public class User : AuditableEntity
 
     public static User New(
         int id, string email, string name, string surname,
-        string? fathersName, int roleId)
-        => new User(id, email, name, surname, fathersName, roleId, false, DateTime.Now, null, 1, null);
+        string? fathersName, int roleId, int createdBy)
+        => new User(id, email, name, surname, fathersName, roleId, false,
+            DateTime.Now, null, createdBy, null);
 
-    public void UpdateProfile(string name, string surname, string? fathersName)
+    public void UpdateProfile(string name, string surname, string? fathersName, int changedBy)
     {
         Name = name;
         Surname = surname;
         FathersName = fathersName;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 
-    public void ConfirmEmail()
+    public void ConfirmEmail(int changedBy)
     {
         Confirmed = true;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 
-    public void ChangeRole(int roleId)
+    public void ChangeRole(int roleId, int changedBy)
     {
         RoleId = roleId;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 }

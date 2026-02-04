@@ -7,5 +7,9 @@ public enum UnitType
 
 public enum Status
 {
-    Default, Ready
+    Default, 
+    Active,
+    Inactive,
+    Maintenance,
+    Disposed
 }

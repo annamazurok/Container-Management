@@ -8,23 +8,25 @@ public class Unit : AuditableEntity
 
     private Unit(
         int id, string title, UnitType unitType,
-        DateTime createdAt, DateTime? updatedAt, int createdBy,  int? updatedBy)
+        DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         Id = id;
         Title = title;
         UnitType = unitType;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
+        CreatedBy = createdBy;
+        ChangedBy = changedBy;
     }
 
-    public static Unit New(int id, string title, UnitType unitType)
-        => new Unit(id, title, unitType, DateTime.Now, null, 1, null);
+    public static Unit New(int id, string title, UnitType unitType, int createdBy)
+        => new Unit(id, title, unitType, DateTime.Now, null, createdBy, null);
 
-    public void UpdateDetails(string title, UnitType unitType)
+    public void UpdateDetails(string title, UnitType unitType, int changedBy)
     {
         Title = title;
         UnitType = unitType;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 }

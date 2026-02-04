@@ -1,6 +1,4 @@
-﻿using Domain.Interfaces;
-
-namespace Domain.Entities;
+﻿namespace Domain.Entities;
 
 public class ProductType : AuditableEntity
 {
@@ -9,8 +7,7 @@ public class ProductType : AuditableEntity
 
     private ProductType(
         int id, string title,
-        DateTime createdAt, DateTime? updatedAt,
-        int createdBy, int? changedBy)
+        DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         Id = id;
         Title = title;
@@ -20,13 +17,13 @@ public class ProductType : AuditableEntity
         ChangedBy = changedBy;
     }
 
-    public static ProductType New(int id, string title)
-        => new ProductType(id, title, DateTime.Now, null, 1, null);
+    public static ProductType New(int id, string title, int createdBy)
+        => new ProductType(id, title, DateTime.Now, null, createdBy, null);
 
-    public void UpdateTitle(string title)
+    public void UpdateTitle(string title, int changedBy)
     {
         Title = title;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 }

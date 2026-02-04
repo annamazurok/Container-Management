@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities;
 
-public class Product :  AuditableEntity
+public class Product : AuditableEntity
 {
     public int Id { get; }
     public int TypeId { get; private set; }
@@ -28,23 +28,25 @@ public class Product :  AuditableEntity
 
     public static Product New(
         int id, int typeId, DateTime produced,
-        DateTime? expirationDate, string? description)
-        => new Product(id, typeId, produced, expirationDate, description, DateTime.Now, null, 1, null);
+        DateTime? expirationDate, string? description, int createdBy)
+        => new Product(id, typeId, produced, expirationDate, description, 
+            DateTime.Now, null, createdBy, null);
 
     public void UpdateDetails(
-        DateTime produced, DateTime? expirationDate, string? description)
+        DateTime produced, DateTime? expirationDate, 
+        string? description, int changedBy)
     {
         Produced = produced;
         ExpirationDate = expirationDate;
         Description = description;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 
-    public void ChangeType(int typeId)
+    public void ChangeType(int typeId, int changedBy)
     {
         TypeId = typeId;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 }
