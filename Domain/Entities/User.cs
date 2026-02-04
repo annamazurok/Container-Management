@@ -16,7 +16,7 @@ public class User : AuditableEntity
         int id, string email, string name, string surname, 
         string? fathersName, int roleId, bool confirmed,
         DateTime createdAt, DateTime? updatedAt,
-        int createdBy, int changedBy)
+        int createdBy, int? changedBy)
     {
         Id = id;
         Email = email;
@@ -34,7 +34,7 @@ public class User : AuditableEntity
     public static User New(
         int id, string email, string name, string surname,
         string? fathersName, int roleId)
-        => new User(id, email, name, surname, fathersName, roleId, false, DateTime.Now, null, 1, 1);
+        => new User(id, email, name, surname, fathersName, roleId, false, DateTime.Now, null, 1, null);
 
     public void UpdateProfile(string name, string surname, string? fathersName)
     {

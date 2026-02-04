@@ -8,7 +8,7 @@ public class Unit : AuditableEntity
 
     private Unit(
         int id, string title, UnitType unitType,
-        DateTime createdAt, DateTime? updatedAt)
+        DateTime createdAt, DateTime? updatedAt, int createdBy,  int? updatedBy)
     {
         Id = id;
         Title = title;
@@ -18,7 +18,7 @@ public class Unit : AuditableEntity
     }
 
     public static Unit New(int id, string title, UnitType unitType)
-        => new Unit(id, title, unitType, DateTime.Now, null);
+        => new Unit(id, title, unitType, DateTime.Now, null, 1, null);
 
     public void UpdateDetails(string title, UnitType unitType)
     {

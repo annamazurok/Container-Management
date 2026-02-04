@@ -11,7 +11,7 @@ public class ContainerType : AuditableEntity
 
     private ContainerType(
         int id, string name, int volume, int unitId,
-        DateTime createdAt, DateTime? updatedAt, int createdBy, int changedBy)
+        DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         Id = id;
         Name = name;
@@ -25,7 +25,7 @@ public class ContainerType : AuditableEntity
 
     public static ContainerType New(
         int id, string name, int volume, int unitId)
-        => new ContainerType(id, name, volume, unitId, DateTime.Now, null, 1 ,1);
+        => new ContainerType(id, name, volume, unitId, DateTime.Now, null, 1 ,null);
 
     public void UpdateDetails(string name, int volume, int unitId)
     {

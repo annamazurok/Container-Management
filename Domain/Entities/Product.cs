@@ -13,7 +13,7 @@ public class Product :  AuditableEntity
     private Product(
         int id, int typeId, DateTime produced,
         DateTime? expirationDate, string? description,
-        DateTime createdAt, DateTime? updatedAt, int createdBy, int changedBy)
+        DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         Id = id;
         TypeId = typeId;
@@ -29,7 +29,7 @@ public class Product :  AuditableEntity
     public static Product New(
         int id, int typeId, DateTime produced,
         DateTime? expirationDate, string? description)
-        => new Product(id, typeId, produced, expirationDate, description, DateTime.Now, null, 1, 1);
+        => new Product(id, typeId, produced, expirationDate, description, DateTime.Now, null, 1, null);
 
     public void UpdateDetails(
         DateTime produced, DateTime? expirationDate, string? description)

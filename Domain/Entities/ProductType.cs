@@ -10,7 +10,7 @@ public class ProductType : AuditableEntity
     private ProductType(
         int id, string title,
         DateTime createdAt, DateTime? updatedAt,
-        int createdBy, int changedBy)
+        int createdBy, int? changedBy)
     {
         Id = id;
         Title = title;
@@ -21,7 +21,7 @@ public class ProductType : AuditableEntity
     }
 
     public static ProductType New(int id, string title)
-        => new ProductType(id, title, DateTime.Now, null, 1, 1);
+        => new ProductType(id, title, DateTime.Now, null, 1, null);
 
     public void UpdateTitle(string title)
     {
