@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Interfaces;
 
-public class User : AuditableEntity
+namespace Domain.Entities;
+
+public class User : AuditableEntity, IEntity
 {
     public int Id { get; }
     public string Email { get; private set; }
