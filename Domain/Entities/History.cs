@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Interfaces;
 
-public class History : AuditableEntity
+namespace Domain.Entities;
+
+public class History : AuditableEntity, IEntity
 {
     public int Id { get; }
     public int ContainerId { get; private set; }

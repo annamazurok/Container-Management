@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Interfaces;
 
-public class Product : AuditableEntity
+namespace Domain.Entities;
+
+public class Product : AuditableEntity, IEntity
 {
     public int Id { get; }
     public int TypeId { get; private set; }
