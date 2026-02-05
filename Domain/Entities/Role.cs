@@ -1,6 +1,8 @@
-﻿namespace Domain.Entities;
+﻿using Domain.Interfaces;
 
-public class Role
+namespace Domain.Entities;
+
+public class Role : IEntity
 {
     public int Id { get; }
     public string Name { get; private set; }
