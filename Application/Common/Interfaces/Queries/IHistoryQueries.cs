@@ -4,10 +4,8 @@ using LanguageExt;
 
 namespace Application.Common.Interfaces.Queries;
 
-public interface IHistoryQueries
+public interface IHistoryQueries : IBaseQuery<History>
 {
-    Task<IReadOnlyList<History>> GetAllAsync(CancellationToken cancellationToken);
-    Task<Option<History>> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetByContainerAsync(int containerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetByProductAsync(int productId, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetByActionTypeAsync(Status actionType, CancellationToken cancellationToken);

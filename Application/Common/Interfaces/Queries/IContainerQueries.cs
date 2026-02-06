@@ -1,13 +1,11 @@
-﻿using System.ComponentModel;
-using Domain;
+﻿using Domain;
+using Domain.Entities;
 using LanguageExt;
 
 namespace Application.Common.Interfaces.Queries;
 
-public interface IContainerQueries
+public interface IContainerQueries : IBaseQuery<Container>
 {
-    Task<IReadOnlyList<Container>> GetAllAsync(CancellationToken cancellationToken);
-    Task<Option<Container>> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Container>> GetByStatusAsync(Status status, CancellationToken cancellationToken);
     Task<IReadOnlyList<Container>> GetByContainerTypeAsync(int containerTypeId, CancellationToken cancellationToken);
     Task<IReadOnlyList<Container>> GetByProductAsync(int productId, CancellationToken cancellationToken);
