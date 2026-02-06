@@ -12,10 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="LanguageExt.Core" Version="4.4.9" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Containers\" />
+      <PackageReference Include="MediatR" Version="13.0.0" />
     </ItemGroup>
 
 </Project>
