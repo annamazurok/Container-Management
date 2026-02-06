@@ -13,4 +13,4 @@ public interface IContainerQueries : IBaseQuery<Container>
     Task<IReadOnlyList<Container>> GetExpiringContainersAsync(DateTime beforeDate, CancellationToken cancellationToken);
     Task<Option<Container>> GetByNameAsync(string name, CancellationToken cancellationToken);
     Task<IReadOnlyList<Container>> GetContainersByProductTypeAsync(int productTypeId, CancellationToken cancellationToken);
-}
+} 
