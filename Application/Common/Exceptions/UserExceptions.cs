@@ -1,16 +1,10 @@
 ﻿namespace Application.Common.Exceptions;
 
-public abstract class UserException(int userId, string message, Exception? innerException = null)
-    : Exception(message, innerException)
-{
-    public int UserId { get; } = userId;
-}
-
 public class UserAlreadyExistsException(int userId)
-    : UserException(userId, $"User with id {userId} already exists");
+    : BaseException(userId, $"User already exists exception");
 
 public class UserNotFoundException(int userId)
-    : UserException(userId, $"User with id {userId} was not found");
+    : BaseException(userId, $"User not found under id {userId}");
 
 public class UnhandledUserException(int userId, Exception? innerException = null)
-    : UserException(userId, "Unhandled user exception", innerException);
+    : BaseException(userId, "Unhandled user exception", innerException);
