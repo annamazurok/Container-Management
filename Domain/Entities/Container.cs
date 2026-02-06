@@ -6,6 +6,7 @@ public class Container : AuditableEntity, IEntity
 {
     public int Id { get; }
     public string Name { get; private set; }
+    public string Code { get; private set; }
     public int TypeId { get; private set; }
     public int ProductId { get; private set; }
     public Status Status { get; private set; }
@@ -19,13 +20,14 @@ public class Container : AuditableEntity, IEntity
     public Unit? Unit { get; private set; }
 
     private Container(
-        int id, string name, int typeId, int productId,
+        int id, string name,string code, int typeId, int productId,
         Status status, DateTime? changingDate, int quantity,
         int unitId, string? notes,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         Id = id;
         Name = name;
+        Code = code;
         TypeId = typeId;
         ProductId = productId;
         Status = status;
@@ -40,9 +42,9 @@ public class Container : AuditableEntity, IEntity
     }
 
     public static Container New(
-        int id, string name, int typeId, int productId,
+        int id, string name, string code, int typeId, int productId,
         int quantity, int unitId, string? notes, int createdBy)
-        => new Container(id, name, typeId, productId, 
+        => new Container(id, name, code, typeId, productId, 
             Status.Active, null, quantity, unitId, notes,
             DateTime.Now, null, createdBy, null);
 
