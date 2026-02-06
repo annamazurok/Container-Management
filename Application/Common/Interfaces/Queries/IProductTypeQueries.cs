@@ -2,9 +2,7 @@
 
 namespace Application.Common.Interfaces.Queries;
 
-public interface IProductTypeQueries
+public interface IProductTypeQueries : IBaseQuery<ProductType>
 {
-    Task<IReadOnlyList<ProductType>> GetAllAsync(CancellationToken cancellationToken);
-    Task<ProductType?> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<ProductType?> GetByTitleAsync(string title, CancellationToken cancellationToken);
 }

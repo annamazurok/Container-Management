@@ -2,10 +2,8 @@
 
 namespace Application.Common.Interfaces.Queries;
 
-public interface IProductQueries
+public interface IProductQueries : IBaseQuery<Product>
 {
-    Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken);
-    Task<Product?> GetByIdAsync(int id, CancellationToken cancellationToken);
     Task<IReadOnlyList<Product>> GetByTypeIdAsync(int typeId, CancellationToken cancellationToken);
     Task<IReadOnlyList<Product>> GetExpiredProductsAsync(DateTime currentDate, CancellationToken cancellationToken);
 }
