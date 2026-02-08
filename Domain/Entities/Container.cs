@@ -4,15 +4,15 @@ namespace Domain.Entities;
 
 public class Container : AuditableEntity, IEntity
 {
-    public int Id { get; }
+    public int Id { get; private set; }
     public string Name { get; private set; }
     public string Code { get; private set; }
     public int TypeId { get; private set; }
-    public int ProductId { get; private set; }
+    public int? ProductId { get; private set; }
     public Status Status { get; private set; }
-    public DateTime? ChangingDate { get; private set; }
-    public int Quantity { get; private set; }
-    public int UnitId { get; private set; }
+    public DateTime ChangingDate { get; private set; }
+    public int? Quantity { get; private set; }
+    public int? UnitId { get; private set; }
     public string? Notes { get; private set; }
 
     public ContainerType? Type { get; private set; }
@@ -20,12 +20,11 @@ public class Container : AuditableEntity, IEntity
     public Unit? Unit { get; private set; }
 
     private Container(
-        int id, string name,string code, int typeId, int productId,
-        Status status, DateTime? changingDate, int quantity,
-        int unitId, string? notes,
+        string name,string code, int typeId, int? productId,
+        Status status, DateTime changingDate, int? quantity,
+        int? unitId, string? notes,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
-        Id = id;
         Name = name;
         Code = code;
         TypeId = typeId;
@@ -42,15 +41,15 @@ public class Container : AuditableEntity, IEntity
     }
 
     public static Container New(
-        int id, string name, string code, int typeId, int productId,
-        int quantity, int unitId, string? notes, int createdBy)
-        => new Container(id, name, code, typeId, productId, 
-            Status.Active, null, quantity, unitId, notes,
+        string name, string code, int typeId, int? productId,
+        int? quantity, int? unitId, string? notes, int createdBy)
+        => new Container(name, code, typeId, productId, 
+            Status.Active, DateTime.Now, quantity, unitId, notes,
             DateTime.Now, null, createdBy, null);
 
     public void UpdateDetails(
-        string name, int typeId, int productId,
-        int quantity, int unitId, string? notes, int changedBy)
+        string name, int typeId, int? productId,
+        int? quantity, int? unitId, string? notes, int changedBy)
     {
         Name = name;
         TypeId = typeId;
@@ -58,14 +57,6 @@ public class Container : AuditableEntity, IEntity
         Quantity = quantity;
         UnitId = unitId;
         Notes = notes;
-        UpdatedAt = DateTime.Now;
-        ChangedBy = changedBy;
-    }
-
-    public void ChangeStatus(Status status, int changedBy)
-    {
-        Status = status;
-        ChangingDate = DateTime.Now;
         UpdatedAt = DateTime.Now;
         ChangedBy = changedBy;
     }

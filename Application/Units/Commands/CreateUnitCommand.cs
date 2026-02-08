@@ -35,7 +35,6 @@ public class CreateUnitCommandHandler(
         {
             var unit = await unitRepository.CreateAsync(
                 DomainUnit.New(
-                    0,
                     request.Title,
                     request.UnitType,
                     1), // TODO: Replace with actual userId from ICurrentUserService

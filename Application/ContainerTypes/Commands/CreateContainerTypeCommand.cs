@@ -47,7 +47,6 @@ public class CreateContainerTypeCommandHandler(
         {
             var containerType = await containerTypeRepository.CreateAsync(
                 ContainerType.New(
-                    0,
                     request.Name,
                     request.Volume,
                     request.UnitId), // TODO: Replace with actual userId from ICurrentUserService

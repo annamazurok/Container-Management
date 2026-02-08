@@ -13,9 +13,9 @@ public class UpdateContainerCommand : IRequest<Either<BaseException, Container>>
     public required int Id { get; init; }
     public required string Name { get; init; }
     public required int TypeId { get; init; }
-    public required int ProductId { get; init; }
-    public required int Quantity { get; init; }
-    public required int UnitId { get; init; }
+    public required int? ProductId { get; init; }
+    public required int? Quantity { get; init; }
+    public required int? UnitId { get; init; }
     public string? Notes { get; init; }
 }
 
@@ -23,6 +23,7 @@ public class UpdateContainerCommandHandler(
     IRepository<Container> containerRepository,
     IContainerQueries containerQueries,
     IContainerTypeQueries containerTypeQueries,
+    IRepository<History> historyRepository,
     IUnitQueries unitQueries) : IRequestHandler<UpdateContainerCommand, Either<BaseException, Container>>
 {
     public async Task<Either<BaseException, Container>> Handle(UpdateContainerCommand request, CancellationToken cancellationToken)
@@ -32,6 +33,7 @@ public class UpdateContainerCommandHandler(
         return await container.MatchAsync(
             c => CheckDuplicates(c.Id, request.Name, cancellationToken)
                 .BindAsync(_ => CheckDependencies(request, cancellationToken)
+                    .BindAsync(_ => CreateHistory(c, cancellationToken))
                     .BindAsync(_ => UpdateEntity(request, c, cancellationToken))),
             () => new ContainerNotFoundException(request.Id));
     }
@@ -67,9 +69,12 @@ public class UpdateContainerCommandHandler(
         if (containerType.IsNone)
             return new ContainerTypeNotFoundException(request.TypeId);
 
-        var unit = await unitQueries.GetByIdAsync(request.UnitId, cancellationToken);
-        if (unit.IsNone)
-            return new UnitNotFoundException(request.UnitId);
+        if (request.UnitId.HasValue)
+        {
+            var unit = await unitQueries.GetByIdAsync(request.UnitId, cancellationToken);
+            if (unit.IsNone)
+                return new UnitNotFoundException(request.UnitId.Value);
+        }
 
         return Unit.Default;
     }
@@ -84,5 +89,30 @@ public class UpdateContainerCommandHandler(
         return container.Match<Either<BaseException, Unit>>(
             c => c.Id.Equals(currentContainerId) ? Unit.Default : new ContainerAlreadyExistException(c.Id),
             () => Unit.Default);
+    }
+    
+    private async Task<Either<BaseException, History>> CreateHistory(
+        Container container, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var history = await historyRepository.CreateAsync(
+                History.New(
+                    container.Id,
+                    container.Quantity,
+                    container.UnitId,
+                    container.ProductId,
+                    container.Status,
+                    container.ChangingDate,
+                    container.Notes,
+                    container.CreatedBy), 
+                cancellationToken);
+
+            return history;
+        }
+        catch (Exception ex)
+        {
+            return new UnhandledHistoryException(0, ex);
+        }
     }
 }

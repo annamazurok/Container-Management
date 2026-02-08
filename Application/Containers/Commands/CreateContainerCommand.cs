@@ -61,7 +61,6 @@ public class CreateContainerCommandHandler(
         {
             var container = await containerRepository.CreateAsync(
                 Container.New(
-                    0,
                     request.Name,
                     request.Code,
                     request.TypeId,
