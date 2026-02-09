@@ -4,14 +4,13 @@ namespace Domain.Entities;
 
 public class ProductType : AuditableEntity, IEntity
 {
-    public int Id { get; }
+    public int Id { get; private set; }
     public string Title { get; private set; }
 
     private ProductType(
-        int id, string title,
+    string title,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
-        Id = id;
         Title = title;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
@@ -19,10 +18,10 @@ public class ProductType : AuditableEntity, IEntity
         ChangedBy = changedBy;
     }
 
-    public static ProductType New(int id, string title, int createdBy)
-        => new ProductType(id, title, DateTime.Now, null, createdBy, null);
+    public static ProductType New(string title, int createdBy)
+        => new ProductType(title, DateTime.Now, null, createdBy, null);
 
-    public void UpdateTitle(string title, int changedBy)
+    public void UpdateDetails(string title, int changedBy)
     {
         Title = title;
         UpdatedAt = DateTime.Now;

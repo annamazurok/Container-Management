@@ -1,5 +1,4 @@
-﻿
-using LanguageExt;
+﻿using LanguageExt;
 
 namespace Api.Services.Abstract;
 

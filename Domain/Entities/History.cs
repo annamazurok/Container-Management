@@ -37,7 +37,7 @@ public class History : AuditableEntity, IEntity
 
     public static History New(
         int containerId, int? quantity, int? unitId,
-        int? productId, Status actionType, DateTime fromDate,string? notes, int createdBy)
-        => new History( containerId, quantity, unitId, productId, actionType, fromDate, notes,
+        int? productId, Status actionType, DateTime fromDate, string? notes, int createdBy)
+        => new History(containerId, quantity, unitId, productId, actionType, fromDate, notes,
             DateTime.Now, null, createdBy, null);
 }

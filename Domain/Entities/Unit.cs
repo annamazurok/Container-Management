@@ -20,8 +20,8 @@ public class Unit : AuditableEntity, IEntity
         ChangedBy = changedBy;
     }
 
-    public static Unit New( string title, UnitType unitType, int createdBy)
-        => new Unit( title, unitType, DateTime.Now, null, createdBy, null);
+    public static Unit New(string title, UnitType unitType, int createdBy)
+        => new Unit(title, unitType, DateTime.Now, null, createdBy, null);
 
     public void UpdateDetails(string title, UnitType unitType, int changedBy)
     {

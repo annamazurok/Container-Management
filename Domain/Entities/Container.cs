@@ -20,7 +20,7 @@ public class Container : AuditableEntity, IEntity
     public Unit? Unit { get; private set; }
 
     private Container(
-        string name,string code, int typeId, int? productId,
+        string name, string code, int typeId, int? productId,
         Status status, DateTime changingDate, int? quantity,
         int? unitId, string? notes,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
