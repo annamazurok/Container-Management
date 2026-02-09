@@ -6,7 +6,7 @@ public interface IControllerService<T>
 {
     Task<IReadOnlyList<T>> GetAllAsync(
         CancellationToken cancellationToken);
-
-    Task<Option<T>> GetByIdAsync(int id,
+    
+    Task<Option<T>> GetByIdAsync( int id,
         CancellationToken cancellationToken);
 }

@@ -25,7 +25,7 @@ public class ContainerType : AuditableEntity, IEntity
     }
 
     public static ContainerType New(
-        int id, string name, int volume, int unitId)
+        string name, int volume, int unitId)
         => new ContainerType(name, volume, unitId, DateTime.Now, null, 1 ,null);
 
     public void UpdateDetails(string name, int volume, int unitId)

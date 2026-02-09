@@ -43,7 +43,7 @@ public class Container : AuditableEntity, IEntity
     public static Container New(
         string name, string code, int typeId, int? productId,
         int? quantity, int? unitId, string? notes, int createdBy)
-        => new Container(name, code, typeId, productId,
+        => new Container(name, code, typeId, productId, 
             Status.Active, DateTime.Now, quantity, unitId, notes,
             DateTime.Now, null, createdBy, null);
 
