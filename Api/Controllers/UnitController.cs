@@ -1,4 +1,5 @@
 ﻿using Api.Dtos;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Units.Commands;
 using MediatR;
@@ -13,19 +14,20 @@ public class UnitController(
     IUnitControllerService unitControllerService) : ControllerBase
 {
     [HttpGet]
-    public async Task<IReadOnlyList<UnitDto>> GetUnits(CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<UnitDto>>> GetUnits(CancellationToken cancellationToken)
     {
-        return await unitControllerService.GetAllAsync(cancellationToken);
+        var result = await unitControllerService.GetAllAsync(cancellationToken);
+        return Ok(result);
     }
 
-    [HttpGet("unitId: int")]
-    public async Task<ActionResult> GetUnitId(
+    [HttpGet("unitId:int")]
+    public async Task<ActionResult<UnitDto>> GetUnitId(
         [FromRoute] int unitId, 
         CancellationToken cancellationToken)
     {
         var result = await unitControllerService.GetByIdAsync(unitId, cancellationToken);
         
-        return result.Match<ActionResult>(
+        return result.Match<ActionResult<UnitDto>>(
             u => Ok(u),
             () => NotFound());
     }
@@ -45,9 +47,7 @@ public class UnitController(
         
         return newUnit.Match<ActionResult<UnitDto>>(
             u => UnitDto.FromDomainModel(u),
-            e => NotFound(e));
-        
-        // change the way of handling an exception (e.ToObjectResult())
+            e => e.ToObjectResult());
     }
 
     [HttpPut]
@@ -66,9 +66,7 @@ public class UnitController(
         
         return updatedUnit.Match<ActionResult<UnitDto>>( 
             u => UnitDto.FromDomainModel(u),
-            e => NotFound(e));
-        
-        // change the way of handling an exception (e.ToObjectResult())
+            e => e.ToObjectResult());
     }
 
     [HttpDelete]
@@ -85,8 +83,6 @@ public class UnitController(
         
         return deletedUnit.Match<ActionResult<UnitDto>>(
             u => UnitDto.FromDomainModel(u),
-            e => NotFound(e));
-        
-        // change the way of handling an exception (e.ToObjectResult())
+            e => e.ToObjectResult());
     }
 }
