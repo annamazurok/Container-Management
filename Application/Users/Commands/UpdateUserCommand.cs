@@ -43,6 +43,7 @@ public class UpdateUserCommandHandler(
         try
         {
             user.UpdateProfile(
+                request.Email,
                 request.Name,
                 request.Surname,
                 request.FathersName,

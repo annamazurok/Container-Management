@@ -43,7 +43,6 @@ public class CreateProductCommandHandler(
         {
             var product = await productRepository.CreateAsync(
                 Product.New(
-                    0,
                     request.TypeId,
                     request.Produced,
                     request.ExpirationDate,

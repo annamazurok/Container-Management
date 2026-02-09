@@ -4,20 +4,14 @@ namespace Domain.Entities;
 
 public class Role : IEntity
 {
-    public int Id { get; }
+    public int Id { get; private set; }
     public string Name { get; private set; }
 
-    private Role(int id, string name)
-    {
-        Id = id;
-        Name = name;
-    }
-
-    public static Role New(int id, string name)
-        => new Role(id, name);
-
-    public void UpdateName(string name)
+    private Role(string name)
     {
         Name = name;
     }
+
+    public static Role New(string name)
+        => new Role(name);
 }

@@ -41,13 +41,10 @@ public class UpdateProductCommandHandler(
         try
         {
             product.UpdateDetails(
+                request.TypeId,
                 request.Produced,
                 request.ExpirationDate,
                 request.Description,
-                1); // TODO: Replace with actual userId from ICurrentUserService
-
-            product.ChangeType(
-                request.TypeId,
                 1); // TODO: Replace with actual userId from ICurrentUserService
 
             return await productRepository.UpdateAsync(product, cancellationToken);

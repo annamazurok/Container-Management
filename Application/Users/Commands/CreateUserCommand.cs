@@ -52,7 +52,6 @@ public class CreateUserCommandHandler(
         {
             var user = await userRepository.CreateAsync(
                 User.New(
-                    0,
                     request.Email,
                     request.Name,
                     request.Surname,

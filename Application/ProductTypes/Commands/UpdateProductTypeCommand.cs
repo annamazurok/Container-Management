@@ -36,7 +36,7 @@ public class UpdateProductTypeCommandHandler(
     {
         try
         {
-            productType.UpdateTitle(request.Title, 1); // TODO: Replace with actual userId from ICurrentUserService
+            productType.UpdateDetails(request.Title, 1); // TODO: Replace with actual userId from ICurrentUserService
 
             return await productTypeRepository.UpdateAsync(productType, cancellationToken);
         }

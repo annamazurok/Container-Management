@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class Product : AuditableEntity, IEntity
 {
-    public int Id { get; }
+    public int Id { get; private set; }
     public int TypeId { get; private set; }
     public DateTime Produced { get; private set; }
     public DateTime? ExpirationDate { get; private set; }
@@ -13,11 +13,10 @@ public class Product : AuditableEntity, IEntity
     public ProductType? Type { get; private set; }
 
     private Product(
-        int id, int typeId, DateTime produced,
+        int typeId, DateTime produced,
         DateTime? expirationDate, string? description,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
-        Id = id;
         TypeId = typeId;
         Produced = produced;
         ExpirationDate = expirationDate;
@@ -29,25 +28,19 @@ public class Product : AuditableEntity, IEntity
     }
 
     public static Product New(
-        int id, int typeId, DateTime produced,
+        int typeId, DateTime produced,
         DateTime? expirationDate, string? description, int createdBy)
-        => new Product(id, typeId, produced, expirationDate, description, 
+        => new Product(typeId, produced, expirationDate, description, 
             DateTime.Now, null, createdBy, null);
 
     public void UpdateDetails(
-        DateTime produced, DateTime? expirationDate, 
+        int typeId, DateTime produced, DateTime? expirationDate, 
         string? description, int changedBy)
     {
+        TypeId = typeId;
         Produced = produced;
         ExpirationDate = expirationDate;
         Description = description;
-        UpdatedAt = DateTime.Now;
-        ChangedBy = changedBy;
-    }
-
-    public void ChangeType(int typeId, int changedBy)
-    {
-        TypeId = typeId;
         UpdatedAt = DateTime.Now;
         ChangedBy = changedBy;
     }

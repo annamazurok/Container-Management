@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public class User : AuditableEntity, IEntity
 {
-    public int Id { get; }
+    public int Id { get; private set; }
     public string Email { get; private set; }
     public string Name { get; private set; }
     public string Surname { get; private set; }
@@ -15,11 +15,10 @@ public class User : AuditableEntity, IEntity
     public Role? Role { get; private set; }
 
     private User(
-        int id, string email, string name, string surname,
+        string email, string name, string surname,
         string? fathersName, int roleId, bool confirmed,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
-        Id = id;
         Email = email;
         Name = name;
         Surname = surname;
@@ -33,13 +32,14 @@ public class User : AuditableEntity, IEntity
     }
 
     public static User New(
-        int id, string email, string name, string surname,
+        string email, string name, string surname,
         string? fathersName, int roleId, int createdBy)
-        => new User(id, email, name, surname, fathersName, roleId, false,
+        => new User(email, name, surname, fathersName, roleId, false,
             DateTime.Now, null, createdBy, null);
 
-    public void UpdateProfile(string name, string surname, string? fathersName, int changedBy)
+    public void UpdateProfile(string email, string name, string surname, string? fathersName, int changedBy)
     {
+        Email = email;
         Name = name;
         Surname = surname;
         FathersName = fathersName;

@@ -36,7 +36,6 @@ namespace Application.ProductTypes.Commands
             {
                 var productType = await productTypeRepository.CreateAsync(
                     ProductType.New(
-                        0,
                         request.Title,
                         1), // TODO: Replace with actual userId from ICurrentUserService
                     cancellationToken);
