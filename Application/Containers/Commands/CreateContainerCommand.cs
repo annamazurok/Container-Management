@@ -13,9 +13,9 @@ public class CreateContainerCommand : IRequest<Either<BaseException, Container>>
     public required string Name { get; init; }
     public required string Code { get; init; }
     public required int TypeId { get; init; }
-    public required int ProductId { get; init; }
-    public required int Quantity { get; init; }
-    public required int UnitId { get; init; }
+    public required int? ProductId { get; init; }
+    public required int? Quantity { get; init; }
+    public required int? UnitId { get; init; }
     public string? Notes { get; init; }
 }
 
@@ -23,7 +23,7 @@ public class CreateContainerCommandHandler(
     IRepository<Container> containerRepository,
     IContainerQueries containerQueries,
     IContainerTypeQueries containerTypeQueries,
-    //IProductQueries productQueries,
+    IProductQueries productQueries,
     IUnitQueries unitQueries) : IRequestHandler<CreateContainerCommand, Either<BaseException, Container>>
 {
     public async Task<Either<BaseException, Container>> Handle(CreateContainerCommand request, CancellationToken cancellationToken)
@@ -43,13 +43,19 @@ public class CreateContainerCommandHandler(
         if (containerType.IsNone)
             return new ContainerTypeNotFoundException(request.TypeId);
 
-        //var product = await productQueries.GetByIdAsync(request.ProductId, cancellationToken);
-        // if (product.IsNone)
-        //     return new ProductNotFoundException(request.ProductId);
+        if (request.ProductId.HasValue)
+        {
+            var product = await productQueries.GetByIdAsync(request.ProductId, cancellationToken);
+            if (product.IsNone)
+                return new ProductNotFoundException(request.ProductId.Value);
+        }
 
-        var unit = await unitQueries.GetByIdAsync(request.UnitId, cancellationToken);
-        if (unit.IsNone)
-            return new UnitNotFoundException(request.UnitId);
+        if (request.UnitId.HasValue)
+        {
+            var unit = await unitQueries.GetByIdAsync(request.UnitId, cancellationToken);
+            if (unit.IsNone)
+                return new UnitNotFoundException(request.UnitId.Value);
+        }
 
         return Unit.Default;
     }
