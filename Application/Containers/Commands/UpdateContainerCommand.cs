@@ -23,6 +23,7 @@ public class UpdateContainerCommandHandler(
     IRepository<Container> containerRepository,
     IContainerQueries containerQueries,
     IContainerTypeQueries containerTypeQueries,
+    IProductQueries productQueries,
     IRepository<History> historyRepository,
     IUnitQueries unitQueries) : IRequestHandler<UpdateContainerCommand, Either<BaseException, Container>>
 {
@@ -68,12 +69,19 @@ public class UpdateContainerCommandHandler(
         var containerType = await containerTypeQueries.GetByIdAsync(request.TypeId, cancellationToken);
         if (containerType.IsNone)
             return new ContainerTypeNotFoundException(request.TypeId);
-
+        
         if (request.UnitId.HasValue)
         {
             var unit = await unitQueries.GetByIdAsync(request.UnitId, cancellationToken);
             if (unit.IsNone)
                 return new UnitNotFoundException(request.UnitId.Value);
+        }
+        
+        if (request.ProductId.HasValue)
+        {
+            var product = await productQueries.GetByIdAsync(request.ProductId, cancellationToken);
+            if (product.IsNone)
+                return new UnitNotFoundException(request.ProductId.Value);
         }
 
         return Unit.Default;
