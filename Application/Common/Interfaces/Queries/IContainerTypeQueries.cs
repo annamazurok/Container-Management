@@ -9,5 +9,6 @@ public interface IContainerTypeQueries : IBaseQuery<ContainerType>
     Task<IReadOnlyList<ContainerType>> GetByUnitAsync(int unitId, CancellationToken cancellationToken);
     Task<IReadOnlyList<ContainerType>> GetByVolumeRangeAsync(int minVolume, int maxVolume, CancellationToken cancellationToken);
     //after many-to-many
-    Task<IReadOnlyList<ProductType>> GetCompatibleProductTypesAsync(int containerTypeId, CancellationToken cancellationToken);
+    Task<IReadOnlyList<ProductType>> GetCompatibleProductTypesAsync(int containerTypeId,
+        CancellationToken cancellationToken);
 }

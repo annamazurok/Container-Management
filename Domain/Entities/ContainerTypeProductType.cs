@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class ContainerTypeProductType
+public class ContainerTypeProductType 
 {
     public int ContainerTypeId { get; private set; }
     public int ProductTypeId { get; private set; }
