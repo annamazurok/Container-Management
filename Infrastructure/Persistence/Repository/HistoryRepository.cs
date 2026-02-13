@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class HistoryRepository : IRepository<History>, IHistoryQueries
+public class HistoryRepository : BaseRepository<History>, IRepository<History>, IHistoryQueries
 {
     private readonly ApplicationDbContext _context;
 
-    public HistoryRepository(ApplicationDbContext context, ApplicationSettings settings)
+    public HistoryRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
         var connectionString = settings.ConnectionStrings.DefaultConnection;
         
@@ -49,28 +49,6 @@ public class HistoryRepository : IRepository<History>, IHistoryQueries
         await _context.SaveChangesAsync(cancellationToken);
 
         return entities.FirstOrDefault();
-    }
-
-    public async Task<IReadOnlyList<History>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _context.Histories.AsNoTracking().ToListAsync(cancellationToken);
-    }
-
-    public async Task<Option<History>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Histories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        return entity ?? Option<History>.None;
-    }
-
-    public async Task<Option<History>> GetByIdAsync(int? id, CancellationToken cancellationToken)
-    {
-        if (!id.HasValue)
-            return Option<History>.None;
-
-        return await GetByIdAsync(id.Value, cancellationToken);
     }
 
     public async Task<IReadOnlyList<History>> GetByContainerAsync(int containerId, CancellationToken cancellationToken)

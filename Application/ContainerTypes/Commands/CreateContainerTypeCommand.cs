@@ -84,19 +84,5 @@ public class CreateContainerTypeCommandHandler(
             return new UnhandledContainerTypeException(0, ex);
         }
     }
-    
-    private async Task<Either<BaseException, Unit>> CheckDuplicates(
-        int currentContainerTypeId,
-        string name,
-        CancellationToken cancellationToken)
-    {
-        var containerType = await containerTypeQueries.GetByNameAsync(name, cancellationToken);
-
-        return containerType.Match<Either<BaseException, Unit>>(
-            ct => ct.Id == currentContainerTypeId
-                ? Unit.Default
-                : new ContainerTypeAlreadyExistException(ct.Id),
-            () => Unit.Default);
-    }
 
 }

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class UserRepository : IRepository<User>, IUserQueries
+public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQueries
 {
     private readonly ApplicationDbContext _context;
 
-    public UserRepository(ApplicationDbContext context, ApplicationSettings settings)
+    public UserRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
         var connectionString = settings.ConnectionStrings.DefaultConnection;
         
@@ -48,28 +48,6 @@ public class UserRepository : IRepository<User>, IUserQueries
         await _context.SaveChangesAsync(cancellationToken);
 
         return entities.FirstOrDefault();
-    }
-
-    public async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _context.Users.AsNoTracking().ToListAsync(cancellationToken);
-    }
-
-    public async Task<Option<User>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        return entity ?? Option<User>.None;
-    }
-
-    public async Task<Option<User>> GetByIdAsync(int? id, CancellationToken cancellationToken)
-    {
-        if (!id.HasValue)
-            return Option<User>.None;
-
-        return await GetByIdAsync(id.Value, cancellationToken);
     }
 
     public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)

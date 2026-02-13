@@ -8,14 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class ContainerRepository : IRepository<Container>, IContainerQueries
+public class ContainerRepository : BaseRepository<Container>, IRepository<Container>, IContainerQueries
 {
     private readonly ApplicationDbContext _context;
 
-    public ContainerRepository(ApplicationDbContext context, ApplicationSettings settings)
+
+    public ContainerRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 
@@ -49,28 +48,6 @@ public class ContainerRepository : IRepository<Container>, IContainerQueries
         await _context.SaveChangesAsync(cancellationToken);
 
         return entities.FirstOrDefault();
-    }
-
-    public async Task<IReadOnlyList<Container>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _context.Containers.AsNoTracking().ToListAsync(cancellationToken);
-    }
-
-    public async Task<Option<Container>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Containers
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        return entity ?? Option<Container>.None;
-    }
-
-    public async Task<Option<Container>> GetByIdAsync(int? id, CancellationToken cancellationToken)
-    {
-        if (!id.HasValue)
-            return Option<Container>.None;
-
-        return await GetByIdAsync(id.Value, cancellationToken);
     }
 
     public async Task<IReadOnlyList<Container>> GetByStatusAsync(Status status, CancellationToken cancellationToken)

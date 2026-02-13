@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class RoleRepository : IRepository<Role>, IRoleQueries
+public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQueries
 {
     private readonly ApplicationDbContext _context;
 
-    public RoleRepository(ApplicationDbContext context, ApplicationSettings settings)
+    public RoleRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
         var connectionString = settings.ConnectionStrings.DefaultConnection;
         
@@ -48,27 +48,5 @@ public class RoleRepository : IRepository<Role>, IRoleQueries
         await _context.SaveChangesAsync(cancellationToken);
 
         return entities.FirstOrDefault();
-    }
-
-    public async Task<IReadOnlyList<Role>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _context.Roles.AsNoTracking().ToListAsync(cancellationToken);
-    }
-
-    public async Task<Option<Role>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Roles
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        return entity ?? Option<Role>.None;
-    }
-
-    public async Task<Option<Role>> GetByIdAsync(int? id, CancellationToken cancellationToken)
-    {
-        if (!id.HasValue)
-            return Option<Role>.None;
-
-        return await GetByIdAsync(id.Value, cancellationToken);
     }
 }

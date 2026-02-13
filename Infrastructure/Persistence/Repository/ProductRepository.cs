@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class ProductRepository : IRepository<Product>, IProductQueries
+public class ProductRepository : BaseRepository<Product>, IRepository<Product>, IProductQueries
 {
     private readonly ApplicationDbContext _context;
 
-    public ProductRepository(ApplicationDbContext context, ApplicationSettings settings)
+    public ProductRepository(ApplicationDbContext context, ApplicationSettings settings) :  base(context, settings)
     {
         var connectionString = settings.ConnectionStrings.DefaultConnection;
         
@@ -48,28 +48,6 @@ public class ProductRepository : IRepository<Product>, IProductQueries
         await _context.SaveChangesAsync(cancellationToken);
 
         return entities.FirstOrDefault();
-    }
-
-    public async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _context.Products.AsNoTracking().ToListAsync(cancellationToken);
-    }
-
-    public async Task<Option<Product>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Products
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        return entity ?? Option<Product>.None;
-    }
-
-    public async Task<Option<Product>> GetByIdAsync(int? id, CancellationToken cancellationToken)
-    {
-        if (!id.HasValue)
-            return Option<Product>.None;
-
-        return await GetByIdAsync(id.Value, cancellationToken);
     }
 
     public async Task<IReadOnlyList<Product>> GetByTypeIdAsync(int typeId, CancellationToken cancellationToken)
