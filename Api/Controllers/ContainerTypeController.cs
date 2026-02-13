@@ -72,7 +72,8 @@ public class ContainerTypeController(
         {
             Name = request.Name,
             Volume = request.Volume,
-            UnitId = request.UnitId
+            UnitId = request.UnitId,
+            ProductTypeIds = request.ProductTypeIds
         };
 
         var result = await sender.Send(command, cancellationToken);
@@ -84,7 +85,7 @@ public class ContainerTypeController(
 
     [HttpPut]
     public async Task<ActionResult<ContainerTypeDto>> UpdateContainerType(
-        [FromBody] ContainerTypeDto request,
+        [FromBody] UpdateContainerTypeDto request,
         CancellationToken cancellationToken)
     {
         var command = new UpdateContainerTypeCommand
@@ -92,7 +93,8 @@ public class ContainerTypeController(
             Id = request.Id,
             Name = request.Name,
             Volume = request.Volume,
-            UnitId = request.UnitId
+            UnitId = request.UnitId,
+            ProductTypeIds = request.ProductTypeIds
         };
 
         var result = await sender.Send(command, cancellationToken);

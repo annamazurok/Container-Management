@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Api.Modules.Validators.ContainerType;
 
-public class UpdateContainerTypeDtoValidator : AbstractValidator<ContainerTypeDto>
+public class UpdateContainerTypeDtoValidator : AbstractValidator<UpdateContainerTypeDto>
 {
     public UpdateContainerTypeDtoValidator()
     {

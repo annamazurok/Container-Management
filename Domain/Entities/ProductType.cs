@@ -6,6 +6,7 @@ public class ProductType : AuditableEntity, IEntity
 {
     public int Id { get; private set; }
     public string Title { get; private set; }
+    public ICollection<ContainerTypeProductType>? ContainerTypes { get; private set; } = [];
 
     private ProductType(
     string title,
