@@ -15,9 +15,8 @@ public class DeleteContainerTypeCommand : IRequest<Either<BaseException, Contain
 public class DeleteContainerTypeCommandHandler(
     IRepository<ContainerType> containerTypeRepository,
     IContainerTypeQueries containerTypeQueries,
-    IContainerQueries containerQueries
-    /*IContainerTypeProductTypeQueries containerTypeProductTypeQueries,
-    IRepository<ContainerTypeProductType> containerTypeProductTypeRepository*/) : IRequestHandler<DeleteContainerTypeCommand, Either<BaseException, ContainerType>>
+    IContainerQueries containerQueries,
+    IContainerTypeProductTypeRepository containerTypeProductTypeRepository) : IRequestHandler<DeleteContainerTypeCommand, Either<BaseException, ContainerType>>
 {
     public async Task<Either<BaseException, ContainerType>> Handle(DeleteContainerTypeCommand request, CancellationToken cancellationToken)
     {
@@ -35,10 +34,10 @@ public class DeleteContainerTypeCommandHandler(
     {
         try
         {
-            // var relations = await containerTypeProductTypeQueries.GetByContainerTypeAsync(containerType.Id, cancellationToken);
-            //
-            // if (relations.Any())
-            //     await containerTypeProductTypeRepository.DeleteRangeAsync(relations, cancellationToken);
+            var relations = await containerTypeProductTypeRepository.GetByContainerTypeAsync(containerType.Id, cancellationToken);
+            
+            if (relations.Any())
+                await containerTypeProductTypeRepository.DeleteRangeAsync(relations, cancellationToken);
 
             await containerTypeRepository.DeleteAsync(containerType, cancellationToken);
 

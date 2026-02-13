@@ -10,6 +10,7 @@ public class ContainerType : AuditableEntity, IEntity
     public int UnitId { get; private set; }
 
     public Unit? Unit { get; private set; }
+    public ICollection<ContainerTypeProductType>? ProductTypes { get; private set; } = [];
 
     private ContainerType(
         string name, int volume, int unitId,
@@ -25,8 +26,11 @@ public class ContainerType : AuditableEntity, IEntity
     }
 
     public static ContainerType New(
-        string name, int volume, int unitId)
-        => new ContainerType(name, volume, unitId, DateTime.Now, null, 1 ,null);
+        string name, int volume, int unitId, ICollection<ContainerTypeProductType> productTypes)
+        => new ContainerType(name, volume, unitId, DateTime.Now, null, 1, null)
+        {
+            ProductTypes = productTypes
+        };
 
     public void UpdateDetails(string name, int volume, int unitId)
     {
