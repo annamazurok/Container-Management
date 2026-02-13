@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class ContainerTypeRepository : IRepository<ContainerType>, IContainerTypeQueries
+public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepository<ContainerType>, IContainerTypeQueries
 {
     private readonly ApplicationDbContext _context;
 
-    public ContainerTypeRepository(ApplicationDbContext context, ApplicationSettings settings)
+    public ContainerTypeRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
         var connectionString = settings.ConnectionStrings.DefaultConnection;
         
@@ -49,29 +49,7 @@ public class ContainerTypeRepository : IRepository<ContainerType>, IContainerTyp
 
         return entities.FirstOrDefault();
     }
-
-    public async Task<IReadOnlyList<ContainerType>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        return await _context.ContainerTypes.AsNoTracking().ToListAsync(cancellationToken);
-    }
-
-    public async Task<Option<ContainerType>> GetByIdAsync(int id, CancellationToken cancellationToken)
-    {
-        var entity = await _context.ContainerTypes
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-
-        return entity ?? Option<ContainerType>.None;
-    }
-
-    public async Task<Option<ContainerType>> GetByIdAsync(int? id, CancellationToken cancellationToken)
-    {
-        if (!id.HasValue)
-            return Option<ContainerType>.None;
-
-        return await GetByIdAsync(id.Value, cancellationToken);
-    }
-
+    
     public async Task<Option<ContainerType>> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
         var entity = await _context.ContainerTypes

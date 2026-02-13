@@ -22,7 +22,8 @@ public class UpdateContainerTypeCommandHandler(
     IContainerTypeQueries containerTypeQueries,
     IUnitQueries unitQueries,
     IProductTypeQueries productTypeQueries,
-    IContainerTypeProductTypeRepository containerTypeProductTypeRepository)
+    IContainerTypeProductTypeRepository containerTypeProductTypeRepository,
+    IContainerTypeProductTypeQuery containerTypeProductTypeQuery)
     : IRequestHandler<UpdateContainerTypeCommand, Either<BaseException, ContainerType>>
 {
     public async Task<Either<BaseException, ContainerType>> Handle(
@@ -51,7 +52,7 @@ public class UpdateContainerTypeCommandHandler(
                 request.Volume,
                 request.UnitId);
 
-            var existingRelations = await containerTypeProductTypeRepository
+            var existingRelations = await containerTypeProductTypeQuery
                 .GetByContainerTypeAsync(containerType.Id, cancellationToken);
 
             var existingIds = existingRelations.Select(x => x.ProductTypeId).ToHashSet();

@@ -1,32 +1,13 @@
-﻿using Application.Common.Interfaces.Repositories;
+﻿using Application.Common.Interfaces.Queries;
+using Application.Common.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
 public class ContainerTypeProductTypeRepository(ApplicationDbContext context) 
-: IContainerTypeProductTypeRepository
+: IContainerTypeProductTypeRepository, IContainerTypeProductTypeQuery
 {
-    public async Task<ContainerTypeProductType> CreateAsync(
-        ContainerTypeProductType entity,
-        CancellationToken cancellationToken)
-    {
-        await context.ContainerTypeProductTypes.AddAsync(entity, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return entity;
-    }
-
-    public async Task<ContainerTypeProductType> DeleteAsync(
-        ContainerTypeProductType entity,
-        CancellationToken cancellationToken)
-    {
-        context.ContainerTypeProductTypes.Remove(entity);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return entity;
-    }
-
     public async Task<ContainerTypeProductType> DeleteRangeAsync(
         IEnumerable<ContainerTypeProductType> entities,
         CancellationToken cancellationToken)
