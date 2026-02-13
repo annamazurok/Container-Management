@@ -13,11 +13,6 @@ public class UpdateContainerDtoValidator :  AbstractValidator<UpdateContainerDto
             .MinimumLength(2)
             .MaximumLength(150);
 
-        RuleFor(x => x.Code)
-            .NotEmpty()
-            .MinimumLength(2)
-            .MaximumLength(50);
-
         RuleFor(x => x.TypeId)
             .GreaterThan(0);
 
