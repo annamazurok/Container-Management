@@ -30,7 +30,6 @@ public record ContainerDto(
 
 public record CreateContainerDto(
     string Name,
-    string Code,
     int  TypeId,
     int? ProductId,
     Status Status,
@@ -42,7 +41,6 @@ public record CreateContainerDto(
 public record UpdateContainerDto(
     int Id,
     string Name,
-    string Code,
     int  TypeId,
     int? ProductId,
     Status Status,
