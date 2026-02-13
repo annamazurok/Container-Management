@@ -1,11 +1,12 @@
 using Api.Modules;
 using Application;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.SetupServices(builder.Configuration);
 builder.Services.AddApplicationServices();
-//builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
