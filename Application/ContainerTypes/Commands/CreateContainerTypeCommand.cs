@@ -13,12 +13,14 @@ public class CreateContainerTypeCommand : IRequest<Either<BaseException, Contain
     public required string Name { get; init; }
     public required int Volume { get; init; }
     public required int UnitId { get; init; }
+    public required IReadOnlyList<int> ProductTypeIds { get; init; }
 }
 
 public class CreateContainerTypeCommandHandler(
     IRepository<ContainerType> containerTypeRepository,
     IContainerTypeQueries containerTypeQueries,
-    IUnitQueries unitQueries) : IRequestHandler<CreateContainerTypeCommand, Either<BaseException, ContainerType>>
+    IUnitQueries unitQueries,
+    IProductTypeQueries productTypeQueries) : IRequestHandler<CreateContainerTypeCommand, Either<BaseException, ContainerType>>
 {
     public async Task<Either<BaseException, ContainerType>> Handle(CreateContainerTypeCommand request, CancellationToken cancellationToken)
     {
@@ -27,7 +29,8 @@ public class CreateContainerTypeCommandHandler(
         return await existingContainerType.MatchAsync(
             ct => new ContainerTypeAlreadyExistException(ct.Id),
             () => CheckUnit(request.UnitId, cancellationToken)
-                .BindAsync(_ => CreateEntity(request, cancellationToken)));
+                .BindAsync(_ => CheckProductTypes(request.ProductTypeIds, cancellationToken)
+                    .BindAsync(_ => CreateEntity(request, cancellationToken))));
     }
 
     private async Task<Either<BaseException, Unit>> CheckUnit(
@@ -40,16 +43,38 @@ public class CreateContainerTypeCommandHandler(
             : Unit.Default;
     }
 
+    private async Task<Either<BaseException, Unit>> CheckProductTypes(
+        IReadOnlyList<int> productTypeIds, CancellationToken cancellationToken)
+    {
+        foreach (var productTypeId in productTypeIds)
+        {
+            var productType = await productTypeQueries.GetByIdAsync(productTypeId, cancellationToken);
+            if (productType.IsNone)
+                return new ProductTypeNotFoundException(productTypeId);
+        }
+
+        return Unit.Default;
+    }
+
     private async Task<Either<BaseException, ContainerType>> CreateEntity(
-        CreateContainerTypeCommand request, CancellationToken cancellationToken)
+        CreateContainerTypeCommand request,
+        CancellationToken cancellationToken)
     {
         try
         {
+            var productTypeAssignments = request.ProductTypeIds
+                .Select(productTypeId => ContainerTypeProductType.New(
+                    0, // 
+                    productTypeId,
+                    1)) // TODO: Replace with actual userId from ICurrentUserService
+                .ToArray();
+
             var containerType = await containerTypeRepository.CreateAsync(
                 ContainerType.New(
                     request.Name,
                     request.Volume,
-                    request.UnitId), // TODO: Replace with actual userId from ICurrentUserService
+                    request.UnitId,
+                    productTypeAssignments),
                 cancellationToken);
 
             return containerType;
@@ -59,4 +84,19 @@ public class CreateContainerTypeCommandHandler(
             return new UnhandledContainerTypeException(0, ex);
         }
     }
+    
+    private async Task<Either<BaseException, Unit>> CheckDuplicates(
+        int currentContainerTypeId,
+        string name,
+        CancellationToken cancellationToken)
+    {
+        var containerType = await containerTypeQueries.GetByNameAsync(name, cancellationToken);
+
+        return containerType.Match<Either<BaseException, Unit>>(
+            ct => ct.Id == currentContainerTypeId
+                ? Unit.Default
+                : new ContainerTypeAlreadyExistException(ct.Id),
+            () => Unit.Default);
+    }
+
 }
