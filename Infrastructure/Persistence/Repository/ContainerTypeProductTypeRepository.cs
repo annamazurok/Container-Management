@@ -1,9 +1,11 @@
-﻿using Domain.Entities;
+﻿using Application.Common.Interfaces.Repositories;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repository;
 
-public class ContainerTypeProductTypeRepository(ApplicationDbContext context)
+public class ContainerTypeProductTypeRepository(ApplicationDbContext context) 
+: IContainerTypeProductTypeRepository
 {
     public async Task<ContainerTypeProductType> CreateAsync(
         ContainerTypeProductType entity,
@@ -65,5 +67,11 @@ public class ContainerTypeProductTypeRepository(ApplicationDbContext context)
             .AsNoTracking()
             .Where(ctpt => ctpt.ProductTypeId == productTypeId)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task CreateRangeAsync(IReadOnlyList<ContainerTypeProductType> entities, CancellationToken ct)
+    {
+        await context.ContainerTypeProductTypes.AddRangeAsync(entities, ct);
+        await context.SaveChangesAsync(ct);
     }
 }
