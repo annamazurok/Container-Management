@@ -26,13 +26,15 @@ public class ContainerTypeProductTypeConfiguration : IEntityTypeConfiguration<Co
             .IsRequired();
 
         builder.HasOne(x => x.ContainerType)
-            .WithMany()
-            .HasForeignKey(x => x.ContainerTypeId)
-            .OnDelete(DeleteBehavior.Cascade);
+           .WithMany(x => x.ProductTypes)
+           .HasForeignKey(x => x.ContainerTypeId)
+           .HasConstraintName("fk_container_type_product_types_container_type_id")
+           .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.ProductType)
-            .WithMany()
+            .WithMany(x => x.ContainerTypes)
             .HasForeignKey(x => x.ProductTypeId)
+            .HasConstraintName("fk_container_type_product_types_product_type_id")
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
