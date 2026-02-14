@@ -11,7 +11,6 @@ namespace Application.Containers.Commands;
 public class CreateContainerCommand : IRequest<Either<BaseException, Container>>
 {
     public required string Name { get; init; }
-    public required string Code { get; init; }
     public required int TypeId { get; init; }
     public required int? ProductId { get; init; }
     public required int? Quantity { get; init; }
@@ -60,15 +59,25 @@ public class CreateContainerCommandHandler(
         return Unit.Default;
     }
 
+    private string GenerateCode()
+    {
+        using var sha256 = System.Security.Cryptography.SHA256.Create();
+        var bytes = System.Text.Encoding.UTF8.GetBytes(Guid.NewGuid().ToString());
+        var hash = sha256.ComputeHash(bytes);
+        return Convert.ToHexString(hash)[..7];
+    }
+
     private async Task<Either<BaseException, Container>> CreateEntity(
         CreateContainerCommand request, CancellationToken cancellationToken)
     {
         try
         {
+            var code = GenerateCode();
+
             var container = await containerRepository.CreateAsync(
                 Container.New(
                     request.Name,
-                    request.Code,
+                    code,
                     request.TypeId,
                     request.ProductId,
                     request.Quantity,

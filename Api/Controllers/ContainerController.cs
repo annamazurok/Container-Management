@@ -93,7 +93,6 @@ public class ContainerController(
         var command = new CreateContainerCommand
         {
             Name = request.Name,
-            Code = request.Code,
             TypeId = request.TypeId,
             ProductId = request.ProductId ?? 0,
             Quantity = request.Quantity ?? 0,
