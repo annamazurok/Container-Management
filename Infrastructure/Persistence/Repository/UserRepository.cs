@@ -13,8 +13,6 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
 
     public UserRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 
@@ -46,17 +44,7 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
     {
         _context.Users.RemoveRange(entities);
         await _context.SaveChangesAsync(cancellationToken);
-
-        return entities.FirstOrDefault();
-    }
-
-    public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-
-        return entity ?? Option<User>.None;
+        return entities.FirstOrDefault(); 
     }
 
     public async Task<IReadOnlyList<User>> GetByRoleIdAsync(int roleId, CancellationToken cancellationToken)
@@ -65,5 +53,28 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
             .AsNoTracking()
             .Where(u => u.RoleId == roleId)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Email == email, cancellationToken);
+
+        return entity ?? Option<User>.None;
+    }
+
+    public async Task<Option<User>> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.GoogleId == googleId, cancellationToken);
+
+        return entity ?? Option<User>.None;
+    }
+
+    public async Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Users.CountAsync(cancellationToken);
     }
 }

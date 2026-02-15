@@ -13,8 +13,6 @@ public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepositor
 
     public ContainerTypeRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 

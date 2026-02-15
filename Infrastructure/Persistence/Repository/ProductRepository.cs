@@ -13,8 +13,6 @@ public class ProductRepository : BaseRepository<Product>, IRepository<Product>, 
 
     public ProductRepository(ApplicationDbContext context, ApplicationSettings settings) :  base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 

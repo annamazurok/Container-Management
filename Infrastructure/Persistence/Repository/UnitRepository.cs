@@ -14,8 +14,6 @@ public class UnitRepository : BaseRepository<Unit>, IRepository<Unit>, IUnitQuer
 
     public UnitRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 

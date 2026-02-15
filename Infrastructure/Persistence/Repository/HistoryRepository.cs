@@ -14,8 +14,6 @@ public class HistoryRepository : BaseRepository<History>, IRepository<History>, 
 
     public HistoryRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 

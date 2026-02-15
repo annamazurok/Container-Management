@@ -13,9 +13,15 @@ public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQuer
 
     public RoleRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
+    }
+
+    public async Task<Option<Role>> GetByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        var role = await _context.Roles
+            .SingleOrDefaultAsync(r => r.Name == name, cancellationToken);
+
+        return role;
     }
 
     public async Task<Role> CreateAsync(Role entity, CancellationToken cancellationToken)
@@ -47,6 +53,6 @@ public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQuer
         _context.Roles.RemoveRange(entities);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return entities.FirstOrDefault();
+        return entities.FirstOrDefault()!;
     }
 }
