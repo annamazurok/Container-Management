@@ -48,6 +48,7 @@ public static class ConfigurePersistenceServices
         services.AddScoped<IRepository<Product>>(provider => provider.GetRequiredService<ProductRepository>());
         services.AddScoped<IRepository<ProductType>>(provider => provider.GetRequiredService<ProductTypeRepository>());
         services.AddScoped<IContainerTypeProductTypeRepository>(provider => provider.GetRequiredService<ContainerTypeProductTypeRepository>());
+        services.AddScoped<IContainerTypeProductTypeQuery>(provider => provider.GetRequiredService<ContainerTypeProductTypeRepository>());
         services.AddScoped<IRepository<User>>(provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IRepository<Role>>(provider => provider.GetRequiredService<RoleRepository>());
         services.AddScoped<IContainerQueries>(provider => provider.GetRequiredService<ContainerRepository>());
@@ -58,5 +59,6 @@ public static class ConfigurePersistenceServices
         services.AddScoped<IProductTypeQueries>(provider => provider.GetRequiredService<ProductTypeRepository>());
         services.AddScoped<IUserQueries>(provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IRoleQueries>(provider => provider.GetRequiredService<RoleRepository>());
+        
     }
 }

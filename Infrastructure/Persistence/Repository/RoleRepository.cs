@@ -13,8 +13,6 @@ public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQuer
 
     public RoleRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 

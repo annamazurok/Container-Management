@@ -11,10 +11,9 @@ public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepositor
 {
     private readonly ApplicationDbContext _context;
 
-    public ContainerTypeRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
+    public ContainerTypeRepository(ApplicationDbContext context, 
+        ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 

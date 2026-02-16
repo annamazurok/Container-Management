@@ -13,8 +13,6 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
 
     public UserRepository(ApplicationDbContext context, ApplicationSettings settings) : base(context, settings)
     {
-        var connectionString = settings.ConnectionStrings.DefaultConnection;
-        
         _context = context;
     }
 
