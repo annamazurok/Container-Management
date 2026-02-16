@@ -1,8 +1,8 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain;
-using Domain.Entities;
 using LanguageExt;
 using MediatR;
 using DomainUnit = Domain.Entities.Unit;
@@ -17,7 +17,8 @@ public class CreateUnitCommand : IRequest<Either<BaseException, DomainUnit>>
 
 public class CreateUnitCommandHandler(
     IRepository<DomainUnit> unitRepository,
-    IUnitQueries unitQueries) : IRequestHandler<CreateUnitCommand, Either<BaseException, DomainUnit>>
+    IUnitQueries unitQueries,
+    ICurrentUserService currentUserService) : IRequestHandler<CreateUnitCommand, Either<BaseException, DomainUnit>>
 {
     public async Task<Either<BaseException, DomainUnit>> Handle(CreateUnitCommand request, CancellationToken cancellationToken)
     {
@@ -33,12 +34,15 @@ public class CreateUnitCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             var unit = await unitRepository.CreateAsync(
                 DomainUnit.New(
                     request.Title,
                     request.UnitType,
-                    1), // TODO: Replace with actual userId from ICurrentUserService
-                cancellationToken);
+                    userId), 
+            cancellationToken);
 
             return unit;
         }

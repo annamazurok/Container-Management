@@ -87,7 +87,7 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
     {
         var entity = await _context.Containers
             .AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Name == name, cancellationToken);
+            .SingleOrDefaultAsync(c => c.Name == name, cancellationToken);
 
         return entity ?? Option<Container>.None;
     }

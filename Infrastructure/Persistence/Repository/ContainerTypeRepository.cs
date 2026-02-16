@@ -52,7 +52,7 @@ public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepositor
     {
         var entity = await _context.ContainerTypes
             .AsNoTracking()
-            .FirstOrDefaultAsync(ct => ct.Name == name, cancellationToken);
+            .SingleOrDefaultAsync(ct => ct.Name == name, cancellationToken);
 
         return entity ?? Option<ContainerType>.None;
     }

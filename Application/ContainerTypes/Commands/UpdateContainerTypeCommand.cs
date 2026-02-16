@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -23,8 +24,8 @@ public class UpdateContainerTypeCommandHandler(
     IUnitQueries unitQueries,
     IProductTypeQueries productTypeQueries,
     IContainerTypeProductTypeRepository containerTypeProductTypeRepository,
-    IContainerTypeProductTypeQuery containerTypeProductTypeQuery)
-    : IRequestHandler<UpdateContainerTypeCommand, Either<BaseException, ContainerType>>
+    IContainerTypeProductTypeQuery containerTypeProductTypeQuery,
+    ICurrentUserService currentUserService): IRequestHandler<UpdateContainerTypeCommand, Either<BaseException, ContainerType>>
 {
     public async Task<Either<BaseException, ContainerType>> Handle(
         UpdateContainerTypeCommand request,
@@ -47,10 +48,14 @@ public class UpdateContainerTypeCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             containerType.UpdateDetails(
                 request.Name,
                 request.Volume,
-                request.UnitId);
+                request.UnitId,
+                userId);
 
             var existingRelations = await containerTypeProductTypeQuery
                 .GetByContainerTypeAsync(containerType.Id, cancellationToken);
@@ -59,7 +64,7 @@ public class UpdateContainerTypeCommandHandler(
 
             var toAdd = request.ProductTypeIds
                 .Where(id => !existingIds.Contains(id))
-                .Select(id => ContainerTypeProductType.New(containerType.Id, id, 1))
+                .Select(id => ContainerTypeProductType.New(containerType.Id, id, userId))
                 .ToList();
 
             var toRemove = existingRelations
@@ -116,5 +121,4 @@ public class UpdateContainerTypeCommandHandler(
                 : new ContainerTypeAlreadyExistException(ct.Id),
             () => Unit.Default);
     }
-
 }

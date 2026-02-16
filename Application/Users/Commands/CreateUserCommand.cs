@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -19,7 +20,8 @@ public class CreateUserCommand : IRequest<Either<BaseException, User>>
 public class CreateUserCommandHandler(
     IRepository<User> userRepository,
     IUserQueries userQueries,
-    IRoleQueries roleQueries)
+    IRoleQueries roleQueries,
+    ICurrentUserService currentUserService)
     : IRequestHandler<CreateUserCommand, Either<BaseException, User>>
 {
     public async Task<Either<BaseException, User>> Handle(
@@ -50,6 +52,9 @@ public class CreateUserCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             var user = await userRepository.CreateAsync(
                 User.New(
                     request.Email,
@@ -57,9 +62,9 @@ public class CreateUserCommandHandler(
                     request.Surname,
                     request.FathersName,
                     request.RoleId,
-                    1 // TODO: Replace with actual userId from ICurrentUserService
+                    userId 
                 ),
-                cancellationToken);
+            cancellationToken);
 
             return user;
         }
