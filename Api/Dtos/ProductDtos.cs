@@ -4,6 +4,7 @@ namespace Api.Dtos;
 
 public record ProductDto(
     int Id,
+    string Name,
     int TypeId,
     DateTime Produced,
     DateTime? ExpirationDate,
@@ -16,6 +17,7 @@ public record ProductDto(
     public static ProductDto FromDomainModel(Product model)
         => new(
             model.Id,
+            model.Name,
             model.TypeId,
             model.Produced,
             model.ExpirationDate,
@@ -28,12 +30,14 @@ public record ProductDto(
 
 public record CreateProductDto(
     int TypeId,
+    string Name,
     DateTime Produced,
     DateTime? ExpirationDate,
     string? Description);
 
 public record UpdateProductDto(
     int Id,
+    string Name,
     int TypeId,
     DateTime Produced,
     DateTime? ExpirationDate,

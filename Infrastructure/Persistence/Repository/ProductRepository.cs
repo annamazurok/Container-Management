@@ -15,6 +15,14 @@ public class ProductRepository : BaseRepository<Product>, IRepository<Product>, 
     {
         _context = context;
     }
+    
+    public new async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .Include(x => x.Type)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<Product> CreateAsync(Product entity, CancellationToken cancellationToken)
     {

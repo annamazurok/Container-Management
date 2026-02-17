@@ -5,6 +5,7 @@ namespace Domain.Entities;
 public class Product : AuditableEntity, IEntity
 {
     public int Id { get; private set; }
+    public string Name { get; private set; }
     public int TypeId { get; private set; }
     public DateTime Produced { get; private set; }
     public DateTime? ExpirationDate { get; private set; }
@@ -13,11 +14,12 @@ public class Product : AuditableEntity, IEntity
     public ProductType? Type { get; private set; }
 
     private Product(
-        int typeId, DateTime produced,
+        int typeId, string name, DateTime produced,
         DateTime? expirationDate, string? description,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         TypeId = typeId;
+        Name = name;
         Produced = produced;
         ExpirationDate = expirationDate;
         Description = description;
@@ -28,16 +30,17 @@ public class Product : AuditableEntity, IEntity
     }
 
     public static Product New(
-        int typeId, DateTime produced,
+        int typeId, string name, DateTime produced,
         DateTime? expirationDate, string? description, int createdBy)
-        => new Product(typeId, produced, expirationDate, description, 
+        => new Product(typeId, name, produced, expirationDate, description, 
             DateTime.Now, null, createdBy, null);
 
     public void UpdateDetails(
-        int typeId, DateTime produced, DateTime? expirationDate, 
+        int typeId, string name,  DateTime produced, DateTime? expirationDate, 
         string? description, int changedBy)
     {
         TypeId = typeId;
+        Name = name;
         Produced = produced;
         ExpirationDate = expirationDate;
         Description = description;

@@ -8,6 +8,7 @@ public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>
     public UpdateProductDtoValidator()
     {
         RuleFor(x => x.Id).NotEmpty();
+        RuleFor(x => x.Name).MaximumLength(20);
 
         RuleFor(x => x.TypeId)
             .GreaterThan(0);

@@ -17,6 +17,16 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
     {
         _context = context;
     }
+    
+    public new async Task<IReadOnlyList<Container>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Containers
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<Container> CreateAsync(Container entity, CancellationToken cancellationToken)
     {
