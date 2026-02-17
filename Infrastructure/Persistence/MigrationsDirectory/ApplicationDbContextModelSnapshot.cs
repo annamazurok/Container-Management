@@ -444,6 +444,10 @@ namespace Infrastructure.Persistence.MigrationsDirectory
                         .HasColumnType("varchar(100)")
                         .HasColumnName("fathers_name");
 
+                    b.Property<string>("GoogleId")
+                        .HasColumnType("text")
+                        .HasColumnName("google_id");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(100)")

@@ -1,7 +1,9 @@
 ﻿using Api.Filters;
 using Api.Services.Abstract;
 using Api.Services.Implementation;
+using Application.Common.Interfaces.Services;
 using Application.Settings;
+using Infrastructure.Persistence.Services;
 
 namespace Api.Modules;
 using FluentValidation;
@@ -54,5 +56,8 @@ public static class SetupModule
         services.AddScoped<IProductTypeControllerService, ProductTypeControllerService>();
         services.AddScoped<IUserControllerService, UserControllerService>();
         services.AddScoped<IRoleControllerService, RoleControllerService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddHttpContextAccessor();
     }
 }
