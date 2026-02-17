@@ -12,6 +12,7 @@ namespace Application.Products.Commands;
 public class CreateProductCommand : IRequest<Either<BaseException, Product>>
 {
     public required int TypeId { get; init; }
+    public required string Name { get; init; }
     public required DateTime Produced { get; init; }
     public DateTime? ExpirationDate { get; init; }
     public string? Description { get; init; }
@@ -49,6 +50,7 @@ public class CreateProductCommandHandler(
             var product = await productRepository.CreateAsync(
                 Product.New(
                     request.TypeId,
+                    request.Name,
                     request.Produced,
                     request.ExpirationDate,
                     request.Description,

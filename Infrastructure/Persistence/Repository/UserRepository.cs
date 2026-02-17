@@ -15,6 +15,14 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
     {
         _context = context;
     }
+    
+    public new async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<User> CreateAsync(User entity, CancellationToken cancellationToken)
     {

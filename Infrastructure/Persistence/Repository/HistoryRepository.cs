@@ -16,6 +16,16 @@ public class HistoryRepository : BaseRepository<History>, IRepository<History>, 
     {
         _context = context;
     }
+    
+    public new async Task<IReadOnlyList<History>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Histories
+            .Include(x => x.Product)
+            .Include(x => x.Container)
+            .Include(x => x.Unit)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 
     public async Task<History> CreateAsync(History entity, CancellationToken cancellationToken)
     {

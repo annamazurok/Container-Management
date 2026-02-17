@@ -12,6 +12,7 @@ namespace Application.Products.Commands;
 public class UpdateProductCommand : IRequest<Either<BaseException, Product>>
 {
     public required int Id { get; init; }
+    public required string Name { get; init; }
     public required int TypeId { get; init; }
     public required DateTime Produced { get; init; }
     public DateTime? ExpirationDate { get; init; }
@@ -47,6 +48,7 @@ public class UpdateProductCommandHandler(
 
             product.UpdateDetails(
                 request.TypeId,
+                request.Name,
                 request.Produced,
                 request.ExpirationDate,
                 request.Description,

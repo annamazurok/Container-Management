@@ -59,6 +59,7 @@ public class ProductController(
     {
         var command = new CreateProductCommand
         {
+            Name = request.Name,
             TypeId = request.TypeId,
             Produced = request.Produced,
             ExpirationDate = request.ExpirationDate,
@@ -80,6 +81,7 @@ public class ProductController(
         var command = new UpdateProductCommand
         {
             Id = request.Id,
+            Name = request.Name,
             TypeId = request.TypeId,
             Produced = request.Produced,
             ExpirationDate = request.ExpirationDate,
