@@ -59,5 +59,6 @@ public static class SetupModule
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddHttpContextAccessor();
+        services.AddScoped<IEmailService, EmailService>();
     }
 }

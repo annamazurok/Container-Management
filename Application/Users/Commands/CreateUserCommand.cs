@@ -21,6 +21,7 @@ public class CreateUserCommandHandler(
     IRepository<User> userRepository,
     IUserQueries userQueries,
     IRoleQueries roleQueries,
+    IEmailService emailService,
     ICurrentUserService currentUserService)
     : IRequestHandler<CreateUserCommand, Either<BaseException, User>>
 {
@@ -69,6 +70,8 @@ public class CreateUserCommandHandler(
                 ),
             cancellationToken);
 
+            await emailService.SendUserCreatedEmailAsync(user.Email);
+            
             return user;
         }
         catch (Exception ex)

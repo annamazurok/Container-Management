@@ -17,6 +17,7 @@ public class ConfirmUserCommand : IRequest<Either<BaseException, User>>
 public class ConfirmUserCommandHandler(
     IRepository<User> userRepository,
     IUserQueries userQueries,
+    IEmailService emailService,
     ICurrentUserService currentUserService)
     : IRequestHandler<ConfirmUserCommand, Either<BaseException, User>>
 {
@@ -33,6 +34,7 @@ public class ConfirmUserCommandHandler(
             u =>
             {
                 u.ConfirmEmail(currentUserId);
+                emailService.SendUserConfirmedEmailAsync(currentUserService.Email);
                 return userRepository.UpdateAsync(u, cancellationToken).Result;
             },
             () => new UserNotFoundException(request.UserId.ToString()));
