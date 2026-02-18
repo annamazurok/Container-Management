@@ -16,6 +16,14 @@ public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQuer
         _context = context;
     }
 
+    public async Task<Option<Role>> GetByNameAsync(string name, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Roles
+            .SingleOrDefaultAsync(r => r.Name == name, cancellationToken);
+
+        return entity ?? Option<Role>.None;
+    }
+
     public async Task<Role> CreateAsync(Role entity, CancellationToken cancellationToken)
     {
         await _context.Roles.AddAsync(entity, cancellationToken);
@@ -45,6 +53,6 @@ public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQuer
         _context.Roles.RemoveRange(entities);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return entities.FirstOrDefault();
+        return entities.FirstOrDefault()!;
     }
 }

@@ -65,11 +65,21 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
         return entity ?? Option<User>.None;
     }
 
+    public Task<Option<User>> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<IReadOnlyList<User>> GetByRoleIdAsync(int roleId, CancellationToken cancellationToken)
     {
         return await _context.Users
             .AsNoTracking()
             .Where(u => u.RoleId == roleId)
             .ToListAsync(cancellationToken);
+    }
+
+    public Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
