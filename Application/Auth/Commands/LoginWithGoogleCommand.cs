@@ -1,7 +1,9 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
+using Application.Common.Interfaces.Repositories;
 using Application.Common.Interfaces.Services;
-using Application.Settings; 
+using Application.Settings;
+using Domain.Entities;
 using Google.Apis.Auth;
 using LanguageExt;
 using MediatR;
@@ -17,6 +19,7 @@ public class LoginWithGoogleCommand : IRequest<Either<BaseException, string>>
 public class LoginWithGoogleCommandHandler(
     IUserQueries userQueries,
     ITokenService tokenService,
+    IRepository<User> userRepository,
     IOptions<GoogleSettings> googleSettings) 
     : IRequestHandler<LoginWithGoogleCommand, Either<BaseException, string>>
 {
@@ -35,16 +38,25 @@ public class LoginWithGoogleCommandHandler(
         if (user.IsNone)
             return new UserNotFoundException($"User with email {payload.Email} not found");
 
-        return user.Match<Either<BaseException, string>>(
-            u =>
+        return await user.MatchAsync(
+            async u =>
             {
                 if (!u.Confirmed)
-                    return new UnauthorizedException("Account not confirmed by administrator");
+                    return (Either<BaseException, string>)
+                        new UnauthorizedException("Account not confirmed by administrator");
+
+                if (string.IsNullOrEmpty(u.GoogleId) || u.GoogleId != payload.Subject)
+                {
+                    u.SetGoogleId(payload.Subject, u.Id);
+                    await userRepository.UpdateAsync(u, cancellationToken);
+                }
 
                 var token = tokenService.GenerateToken(u);
                 return token;
             },
-            () => new UserNotFoundException(payload.Email));
+            () => Task.FromResult<Either<BaseException, string>>(
+                new UserNotFoundException(payload.Email))
+        );
     }
 
     private async Task<GoogleJsonWebSignature.Payload?> VerifyGoogleTokenAsync(string idToken)

@@ -71,6 +71,12 @@ public class RegisterWithGoogleCommandHandler(
         }
 
         var createdUser = await userRepository.CreateAsync(user, cancellationToken);
+        
+        if (!createdUser.Confirmed)
+        {
+            return new UnauthorizedException(
+                "Your account is pending approval by administrator. Please wait for confirmation.");
+        }
 
         var token = tokenService.GenerateToken(createdUser);
 

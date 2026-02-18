@@ -113,4 +113,17 @@ public class UserController(
             u => Ok(UserDto.FromDomainModel(u)),
             e => e.ToObjectResult());
     }
+    
+    [HttpPost("{userId:int}/confirm")]
+    public async Task<IActionResult> ConfirmUser(
+        [FromRoute] int userId,
+        CancellationToken cancellationToken)
+    {
+        var command = new ConfirmUserCommand { UserId = userId };
+        var result = await sender.Send(command, cancellationToken);
+
+        return result.Match<IActionResult>(
+            user => Ok(UserDto.FromDomainModel(user)),
+            error => error.ToObjectResult());
+    }
 }

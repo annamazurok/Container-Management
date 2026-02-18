@@ -28,6 +28,9 @@ public class CreateUserCommandHandler(
         CreateUserCommand request,
         CancellationToken cancellationToken)
     {
+        var adminId = currentUserService.UserId
+                      ?? throw new UnauthorizedException("User not authenticated");
+        
         var existingUser = await userQueries.GetByEmailAsync(
             request.Email, cancellationToken);
 
