@@ -25,11 +25,13 @@ public static class SetupModule
     private static void AddCors(this IServiceCollection services)
     {
         services.AddCors(options =>
-            options.AddDefaultPolicy(policy =>
-                policy.SetIsOriginAllowed(_ => true)
+            options.AddPolicy("AllowFrontend", policy =>
+                policy
+                    .WithOrigins("http://localhost:5173")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials()));
+                    .AllowCredentials()
+            ));
     }
 
     private static void AddRequestValidation(this IServiceCollection services)

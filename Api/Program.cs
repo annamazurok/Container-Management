@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
 
 await app.InitialiseDatabaseAsync();
 
-app.UseCors();
+app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
