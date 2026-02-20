@@ -18,7 +18,7 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
         _context = context;
     }
     
-    public new async Task<IReadOnlyList<Container>> GetAllAsync(CancellationToken cancellationToken)
+    public override async Task<IReadOnlyList<Container>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Containers
             .Include(x => x.Product)
@@ -27,7 +27,26 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
-
+    
+    public override async Task<Option<Container>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Containers
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+    
+    public override async Task<Option<Container>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    {
+        return await _context.Containers
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
     public async Task<Container> CreateAsync(Container entity, CancellationToken cancellationToken)
     {
         await _context.Containers.AddAsync(entity, cancellationToken);
@@ -65,6 +84,9 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
         return await _context.Containers
             .AsNoTracking()
             .Where(c => c.Status == status)
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
             .ToListAsync(cancellationToken);
     }
 
@@ -73,6 +95,9 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
         return await _context.Containers
             .AsNoTracking()
             .Where(c => c.TypeId == containerTypeId)
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
             .ToListAsync(cancellationToken);
     }
 
@@ -81,6 +106,9 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
         return await _context.Containers
             .AsNoTracking()
             .Where(c => c.ProductId == productId)
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
             .ToListAsync(cancellationToken);
     }
 
@@ -97,7 +125,10 @@ public class ContainerRepository : BaseRepository<Container>, IRepository<Contai
     {
         var entity = await _context.Containers
             .AsNoTracking()
-            .SingleOrDefaultAsync(c => c.Name == name, cancellationToken);
+            .Include(x => x.Product)
+            .Include(x => x.Type)
+            .Include(x => x.Unit)
+            .FirstOrDefaultAsync(c => c.Name == name, cancellationToken);
 
         return entity ?? Option<Container>.None;
     }

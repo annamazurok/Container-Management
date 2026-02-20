@@ -17,7 +17,7 @@ public class HistoryRepository : BaseRepository<History>, IRepository<History>, 
         _context = context;
     }
     
-    public new async Task<IReadOnlyList<History>> GetAllAsync(CancellationToken cancellationToken)
+    public override async Task<IReadOnlyList<History>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Histories
             .Include(x => x.Product)
@@ -25,6 +25,26 @@ public class HistoryRepository : BaseRepository<History>, IRepository<History>, 
             .Include(x => x.Unit)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public override async Task<Option<History>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Histories
+            .Include(x => x.Product)
+            .Include(x => x.Container)
+            .Include(x => x.Unit)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+    
+    public override async Task<Option<History>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    {
+        return await _context.Histories
+            .Include(x => x.Product)
+            .Include(x => x.Container)
+            .Include(x => x.Unit)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<History> CreateAsync(History entity, CancellationToken cancellationToken)

@@ -15,14 +15,14 @@ public abstract class BaseRepository<T> : IBaseQuery<T> where T : class, IEntity
         _context = context;
     }
 
-    public async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken)
+    public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Set<T>()
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Option<T>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public virtual async Task<Option<T>> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
         var entity = await _context.Set<T>()
             .AsNoTracking()
@@ -31,7 +31,7 @@ public abstract class BaseRepository<T> : IBaseQuery<T> where T : class, IEntity
         return entity ?? Option<T>.None;
     }
 
-    public async Task<Option<T>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    public virtual async Task<Option<T>> GetByIdAsync(int? id, CancellationToken cancellationToken)
     {
         if (!id.HasValue)
             return Option<T>.None;

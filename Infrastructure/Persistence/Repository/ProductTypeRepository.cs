@@ -52,7 +52,7 @@ public class ProductTypeRepository : BaseRepository<ProductType>, IRepository<Pr
     {
         var entity = await _context.ProductTypes
             .AsNoTracking()
-            .SingleOrDefaultAsync(pt => pt.Title == title, cancellationToken);
+            .FirstOrDefaultAsync(pt => pt.Title == title, cancellationToken);
 
         return entity ?? Option<ProductType>.None;
     }
