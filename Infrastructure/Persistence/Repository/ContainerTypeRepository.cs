@@ -22,6 +22,7 @@ public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepositor
         return await _context.ContainerTypes
             .Include(x => x.ProductTypes)!
             .ThenInclude(x => x.ProductType)
+            .Include(x => x.Unit)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
