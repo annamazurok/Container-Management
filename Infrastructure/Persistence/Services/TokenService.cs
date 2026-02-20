@@ -26,7 +26,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
 
         if (user.Role != null)
         {
-            claims.Add(new Claim(ClaimTypes.Role, user.Role.Name));
+            claims.Add(new Claim("role", user.Role.Name));
         }
 
         var key = new SymmetricSecurityKey(

@@ -66,6 +66,7 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
     public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
         var entity = await _context.Users
+            .Include(x => x.Role)
             .AsNoTracking()
             .SingleOrDefaultAsync(u => u.Email == email, cancellationToken);
 
@@ -75,6 +76,7 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
     public async Task<Option<User>> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken)
     {
         var entity = await _context.Users
+            .Include(x => x.Role)
             .AsNoTracking()
             .SingleOrDefaultAsync(u => u.GoogleId == googleId, cancellationToken);
 

@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Api.Modules;
 using Application;
@@ -39,10 +40,13 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = true,
             ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero 
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = "role"
         };
     });
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();

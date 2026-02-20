@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("product-types")]
+[Route("product-types")] 
 [Authorize]
 [ApiController]
 public class ProductTypeController(
