@@ -19,7 +19,7 @@ public class RoleRepository : BaseRepository<Role>, IRepository<Role>, IRoleQuer
     public async Task<Option<Role>> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
         var entity = await _context.Roles
-            .SingleOrDefaultAsync(r => r.Name == name, cancellationToken);
+            .FirstOrDefaultAsync(r => r.Name == name, cancellationToken);
 
         return entity ?? Option<Role>.None;
     }

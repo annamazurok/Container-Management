@@ -16,12 +16,28 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
         _context = context;
     }
     
-    public new async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
+    public override async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Users
             .Include(x => x.Role)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public override async Task<Option<User>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+    
+    public override async Task<Option<User>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    {
+        return await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<User> CreateAsync(User entity, CancellationToken cancellationToken)

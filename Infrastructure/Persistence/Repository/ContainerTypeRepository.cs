@@ -17,13 +17,31 @@ public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepositor
         _context = context;
     }
     
-    public new async Task<IReadOnlyList<ContainerType>> GetAllAsync(CancellationToken cancellationToken)
+    public override async Task<IReadOnlyList<ContainerType>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.ContainerTypes
             .Include(x => x.ProductTypes)!
             .ThenInclude(x => x.ProductType)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public override async Task<Option<ContainerType>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.ContainerTypes
+            .Include(x => x.ProductTypes)!
+            .ThenInclude(x => x.ProductType)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+    
+    public override async Task<Option<ContainerType>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    {
+        return await _context.ContainerTypes
+            .Include(x => x.ProductTypes)!
+            .ThenInclude(x => x.ProductType)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<ContainerType> CreateAsync(ContainerType entity, CancellationToken cancellationToken)
@@ -62,7 +80,7 @@ public class ContainerTypeRepository : BaseRepository<ContainerType>, IRepositor
     {
         var entity = await _context.ContainerTypes
             .AsNoTracking()
-            .SingleOrDefaultAsync(ct => ct.Name == name, cancellationToken);
+            .FirstOrDefaultAsync(ct => ct.Name == name, cancellationToken);
 
         return entity ?? Option<ContainerType>.None;
     }
