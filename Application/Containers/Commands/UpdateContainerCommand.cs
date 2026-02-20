@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -25,7 +26,8 @@ public class UpdateContainerCommandHandler(
     IContainerTypeQueries containerTypeQueries,
     IProductQueries productQueries,
     IRepository<History> historyRepository,
-    IUnitQueries unitQueries) : IRequestHandler<UpdateContainerCommand, Either<BaseException, Container>>
+    IUnitQueries unitQueries, 
+    ICurrentUserService currentUserService) : IRequestHandler<UpdateContainerCommand, Either<BaseException, Container>>
 {
     public async Task<Either<BaseException, Container>> Handle(UpdateContainerCommand request, CancellationToken cancellationToken)
     {
@@ -46,6 +48,9 @@ public class UpdateContainerCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             container.UpdateDetails(
                 request.Name,
                 request.TypeId,
@@ -53,7 +58,7 @@ public class UpdateContainerCommandHandler(
                 request.Quantity,
                 request.UnitId,
                 request.Notes,
-                1); // TODO: Replace with actual userId from ICurrentUserService
+                userId); 
 
             return await containerRepository.UpdateAsync(container, cancellationToken);
         }

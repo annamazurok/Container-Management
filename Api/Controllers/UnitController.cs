@@ -3,11 +3,13 @@ using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Units.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("units")]
+[Authorize]
 [ApiController]
 public class UnitController(
     ISender sender,
@@ -32,6 +34,7 @@ public class UnitController(
             () => NotFound());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<UnitDto>> CreateUnit(
         [FromBody] CreateUnitDto request,
@@ -50,6 +53,7 @@ public class UnitController(
             e => e.ToObjectResult());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult<UnitDto>> UpdateUnit(
         [FromBody] UnitDto request,
@@ -69,6 +73,7 @@ public class UnitController(
             e => e.ToObjectResult());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     public async Task<ActionResult<UnitDto>> DeleteUnit(
         [FromRoute] int unitId,

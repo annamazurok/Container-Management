@@ -3,11 +3,13 @@ using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.ProductTypes.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("product-types")]
+[Route("product-types")] 
+[Authorize]
 [ApiController]
 public class ProductTypeController(
     ISender sender,
@@ -45,6 +47,7 @@ public class ProductTypeController(
             () => NotFound());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<ProductTypeDto>> CreateProductType(
         [FromBody] CreateProductTypeDto request,
@@ -62,6 +65,7 @@ public class ProductTypeController(
             e => e.ToObjectResult());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult<ProductTypeDto>> UpdateProductType(
         [FromBody] ProductTypeDto request,
@@ -80,6 +84,7 @@ public class ProductTypeController(
             e => e.ToObjectResult());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ProductTypeDto>> DeleteProductType(
         [FromRoute] int id,

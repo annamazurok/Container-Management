@@ -1,7 +1,9 @@
 ﻿using Api.Filters;
 using Api.Services.Abstract;
 using Api.Services.Implementation;
+using Application.Common.Interfaces.Services;
 using Application.Settings;
+using Infrastructure.Persistence.Services;
 
 namespace Api.Modules;
 using FluentValidation;
@@ -23,11 +25,13 @@ public static class SetupModule
     private static void AddCors(this IServiceCollection services)
     {
         services.AddCors(options =>
-            options.AddDefaultPolicy(policy =>
-                policy.SetIsOriginAllowed(_ => true)
+            options.AddPolicy("AllowFrontend", policy =>
+                policy
+                    .WithOrigins("http://localhost:5173")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials()));
+                    .AllowCredentials()
+            ));
     }
 
     private static void AddRequestValidation(this IServiceCollection services)
@@ -54,5 +58,9 @@ public static class SetupModule
         services.AddScoped<IProductTypeControllerService, ProductTypeControllerService>();
         services.AddScoped<IUserControllerService, UserControllerService>();
         services.AddScoped<IRoleControllerService, RoleControllerService>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IEmailService, EmailService>();
     }
 }

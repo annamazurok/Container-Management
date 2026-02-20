@@ -53,7 +53,7 @@ public class UnitRepository : BaseRepository<Unit>, IRepository<Unit>, IUnitQuer
     {
         var entity = await _context.Units
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Title == title, cancellationToken);
+            .SingleOrDefaultAsync(u => u.Title == title, cancellationToken);
 
         return entity ?? Option<Unit>.None;
     }
