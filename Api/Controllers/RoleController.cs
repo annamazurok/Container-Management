@@ -1,10 +1,12 @@
 ﻿using Api.Dtos;
 using Api.Services.Abstract;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("roles")]
+[Authorize(Roles = "Admin")]
 [ApiController]
 public class RoleController(
     IRoleControllerService roleControllerService) : ControllerBase

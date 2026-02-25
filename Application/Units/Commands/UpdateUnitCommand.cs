@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain;
 using Domain.Entities;
 using LanguageExt;
@@ -18,7 +19,8 @@ public class UpdateUnitCommand : IRequest<Either<BaseException, Domain.Entities.
 
 public class UpdateUnitCommandHandler(
     IRepository<Domain.Entities.Unit> unitRepository,
-    IUnitQueries unitQueries) : IRequestHandler<UpdateUnitCommand, Either<BaseException, Domain.Entities.Unit>>
+    IUnitQueries unitQueries,
+    ICurrentUserService currentUserService) : IRequestHandler<UpdateUnitCommand, Either<BaseException, Domain.Entities.Unit>>
 {
     public async Task<Either<BaseException, Domain.Entities.Unit>> Handle(UpdateUnitCommand request, CancellationToken cancellationToken)
     {
@@ -37,10 +39,13 @@ public class UpdateUnitCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             unit.UpdateDetails(
                 request.Title,
                 request.UnitType,
-                1); // TODO: Replace with actual userId from ICurrentUserService
+                userId); 
 
             return await unitRepository.UpdateAsync(unit, cancellationToken);
         }

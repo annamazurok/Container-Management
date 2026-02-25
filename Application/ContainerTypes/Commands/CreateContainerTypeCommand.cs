@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -20,7 +21,8 @@ public class CreateContainerTypeCommandHandler(
     IRepository<ContainerType> containerTypeRepository,
     IContainerTypeQueries containerTypeQueries,
     IUnitQueries unitQueries,
-    IProductTypeQueries productTypeQueries) : IRequestHandler<CreateContainerTypeCommand, Either<BaseException, ContainerType>>
+    IProductTypeQueries productTypeQueries, 
+    ICurrentUserService currentUserService) : IRequestHandler<CreateContainerTypeCommand, Either<BaseException, ContainerType>>
 {
     public async Task<Either<BaseException, ContainerType>> Handle(CreateContainerTypeCommand request, CancellationToken cancellationToken)
     {
@@ -62,11 +64,14 @@ public class CreateContainerTypeCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             var productTypeAssignments = request.ProductTypeIds
                 .Select(productTypeId => ContainerTypeProductType.New(
-                    0, // 
+                    0, 
                     productTypeId,
-                    1)) // TODO: Replace with actual userId from ICurrentUserService
+                    userId)) 
                 .ToArray();
 
             var containerType = await containerTypeRepository.CreateAsync(
@@ -74,7 +79,8 @@ public class CreateContainerTypeCommandHandler(
                     request.Name,
                     request.Volume,
                     request.UnitId,
-                    productTypeAssignments),
+                    productTypeAssignments,
+                    userId),
                 cancellationToken);
 
             return containerType;
@@ -84,5 +90,4 @@ public class CreateContainerTypeCommandHandler(
             return new UnhandledContainerTypeException(0, ex);
         }
     }
-
 }

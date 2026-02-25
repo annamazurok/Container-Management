@@ -3,11 +3,13 @@ using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.ContainerTypes.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("container-types")]
+[Authorize]
 [ApiController]
 public class ContainerTypeController(
     ISender sender,
@@ -63,6 +65,7 @@ public class ContainerTypeController(
         return Ok(result);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<ActionResult<ContainerTypeDto>> CreateContainerType(
         [FromBody] CreateContainerTypeDto request,
@@ -83,6 +86,7 @@ public class ContainerTypeController(
             e => e.ToObjectResult());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut]
     public async Task<ActionResult<ContainerTypeDto>> UpdateContainerType(
         [FromBody] UpdateContainerTypeDto request,
@@ -104,6 +108,7 @@ public class ContainerTypeController(
             e => e.ToObjectResult());
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<ContainerTypeDto>> DeleteContainerType(
         [FromRoute] int id,

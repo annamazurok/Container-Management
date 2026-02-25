@@ -16,12 +16,28 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
         _context = context;
     }
     
-    public new async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
+    public override async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Users
             .Include(x => x.Role)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public override async Task<Option<User>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+    
+    public override async Task<Option<User>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    {
+        return await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<User> CreateAsync(User entity, CancellationToken cancellationToken)
@@ -52,22 +68,7 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
     {
         _context.Users.RemoveRange(entities);
         await _context.SaveChangesAsync(cancellationToken);
-
-        return entities.FirstOrDefault();
-    }
-
-    public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-
-        return entity ?? Option<User>.None;
-    }
-
-    public Task<Option<User>> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        return entities.FirstOrDefault(); 
     }
 
     public async Task<IReadOnlyList<User>> GetByRoleIdAsync(int roleId, CancellationToken cancellationToken)
@@ -78,8 +79,28 @@ public class UserRepository : BaseRepository<User>, IRepository<User>, IUserQuer
             .ToListAsync(cancellationToken);
     }
 
-    public Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
+    public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var entity = await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Email == email, cancellationToken);
+
+        return entity ?? Option<User>.None;
+    }
+
+    public async Task<Option<User>> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken)
+    {
+        var entity = await _context.Users
+            .Include(x => x.Role)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.GoogleId == googleId, cancellationToken);
+
+        return entity ?? Option<User>.None;
+    }
+
+    public async Task<int> GetTotalCountAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Users.CountAsync(cancellationToken);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -16,7 +17,8 @@ public class UpdateProductTypeCommand : IRequest<Either<BaseException, ProductTy
 
 public class UpdateProductTypeCommandHandler(
     IRepository<ProductType> productTypeRepository,
-    IProductTypeQueries productTypeQueries)
+    IProductTypeQueries productTypeQueries,
+    ICurrentUserService currentUserService)
     : IRequestHandler<UpdateProductTypeCommand, Either<BaseException, ProductType>>
 {
     public async Task<Either<BaseException, ProductType>> Handle(UpdateProductTypeCommand request, CancellationToken cancellationToken)
@@ -36,7 +38,10 @@ public class UpdateProductTypeCommandHandler(
     {
         try
         {
-            productType.UpdateDetails(request.Title, 1); // TODO: Replace with actual userId from ICurrentUserService
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
+            productType.UpdateDetails(request.Title, userId); 
 
             return await productTypeRepository.UpdateAsync(productType, cancellationToken);
         }

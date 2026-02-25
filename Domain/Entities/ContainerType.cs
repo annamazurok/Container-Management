@@ -26,18 +26,18 @@ public class ContainerType : AuditableEntity, IEntity
     }
 
     public static ContainerType New(
-        string name, int volume, int unitId, ICollection<ContainerTypeProductType> productTypes)
-        => new ContainerType(name, volume, unitId, DateTime.Now, null, 1, null)
+        string name, int volume, int unitId, ICollection<ContainerTypeProductType> productTypes, int createdBy)
+        => new ContainerType(name, volume, unitId, DateTime.Now, null, createdBy, null)
         {
             ProductTypes = productTypes
         };
 
-    public void UpdateDetails(string name, int volume, int unitId)
+    public void UpdateDetails(string name, int volume, int unitId, int changedBy)
     {
         Name = name;
         Volume = volume;
         UnitId = unitId;
         UpdatedAt = DateTime.Now;
-        ChangedBy = 1;
+        ChangedBy = changedBy;
     }
 }

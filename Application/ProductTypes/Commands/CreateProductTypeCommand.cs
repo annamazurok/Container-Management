@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -14,7 +15,8 @@ namespace Application.ProductTypes.Commands
 
     public class CreateProductTypeCommandHandler(
     IRepository<ProductType> productTypeRepository,
-    IProductTypeQueries productTypeQueries)
+    IProductTypeQueries productTypeQueries,
+    ICurrentUserService currentUserService)
     : IRequestHandler<CreateProductTypeCommand, Either<BaseException, ProductType>>
     {
         public async Task<Either<BaseException, ProductType>> Handle(
@@ -34,10 +36,13 @@ namespace Application.ProductTypes.Commands
         {
             try
             {
+                var userId = currentUserService.UserId
+                ?? throw new UnauthorizedException("User not authenticated");
+
                 var productType = await productTypeRepository.CreateAsync(
                     ProductType.New(
                         request.Title,
-                        1), // TODO: Replace with actual userId from ICurrentUserService
+                        userId),
                     cancellationToken);
 
                 return productType;

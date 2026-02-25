@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Services;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -21,7 +22,8 @@ public class UpdateUserCommand : IRequest<Either<BaseException, User>>
 public class UpdateUserCommandHandler(
     IRepository<User> userRepository,
     IUserQueries userQueries,
-    IRoleQueries roleQueries)
+    IRoleQueries roleQueries,
+    ICurrentUserService currentUserService)
     : IRequestHandler<UpdateUserCommand, Either<BaseException, User>>
 {
     public async Task<Either<BaseException, User>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -42,16 +44,19 @@ public class UpdateUserCommandHandler(
     {
         try
         {
+            var userId = currentUserService.UserId
+            ?? throw new UnauthorizedException("User not authenticated");
+
             user.UpdateProfile(
                 request.Email,
                 request.Name,
                 request.Surname,
                 request.FathersName,
-                1); // TODO: Replace with actual userId from ICurrentUserService
+                userId); 
 
             user.ChangeRole(
                 request.RoleId,
-                1); // TODO: Replace with actual userId from ICurrentUserService
+                userId); 
 
             return await userRepository.UpdateAsync(user, cancellationToken);
         }

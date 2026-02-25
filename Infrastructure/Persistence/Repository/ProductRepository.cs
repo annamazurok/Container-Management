@@ -16,12 +16,28 @@ public class ProductRepository : BaseRepository<Product>, IRepository<Product>, 
         _context = context;
     }
     
-    public new async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken)
+    public override async Task<IReadOnlyList<Product>> GetAllAsync(CancellationToken cancellationToken)
     {
         return await _context.Products
             .Include(x => x.Type)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+    
+    public override async Task<Option<Product>> GetByIdAsync(int id, CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .Include(x => x.Type)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+    
+    public override async Task<Option<Product>> GetByIdAsync(int? id, CancellationToken cancellationToken)
+    {
+        return await _context.Products
+            .Include(x => x.Type)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
     public async Task<Product> CreateAsync(Product entity, CancellationToken cancellationToken)

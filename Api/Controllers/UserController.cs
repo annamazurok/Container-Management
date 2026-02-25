@@ -3,11 +3,13 @@ using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Users.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
 [Route("users")]
+[Authorize(Roles = "Admin")]
 [ApiController]
 public class UserController(
     ISender sender,
@@ -112,5 +114,18 @@ public class UserController(
         return result.Match<ActionResult<UserDto>>(
             u => Ok(UserDto.FromDomainModel(u)),
             e => e.ToObjectResult());
+    }
+    
+    [HttpPost("{userId:int}/confirm")]
+    public async Task<IActionResult> ConfirmUser(
+        [FromRoute] int userId,
+        CancellationToken cancellationToken)
+    {
+        var command = new ConfirmUserCommand { UserId = userId };
+        var result = await sender.Send(command, cancellationToken);
+
+        return result.Match<IActionResult>(
+            user => Ok(UserDto.FromDomainModel(user)),
+            error => error.ToObjectResult());
     }
 }
