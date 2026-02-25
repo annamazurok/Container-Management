@@ -32,8 +32,6 @@ public record CreateContainerDto(
     string Name,
     int  TypeId,
     int? ProductId,
-    Status Status,
-    DateTime ChangingDate,
     int? Quantity,
     int? UnitId,
     string? Notes);
@@ -44,7 +42,6 @@ public record UpdateContainerDto(
     int  TypeId,
     int? ProductId,
     Status Status,
-    DateTime ChangingDate,
     int? Quantity,
     int? UnitId,
     string? Notes);

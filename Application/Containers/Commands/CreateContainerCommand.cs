@@ -13,9 +13,9 @@ public class CreateContainerCommand : IRequest<Either<BaseException, Container>>
 {
     public required string Name { get; init; }
     public required int TypeId { get; init; }
-    public required int? ProductId { get; init; }
-    public required int? Quantity { get; init; }
-    public required int? UnitId { get; init; }
+    public int? ProductId { get; init; }
+    public int? Quantity { get; init; }
+    public int? UnitId { get; init; }
     public string? Notes { get; init; }
 }
 

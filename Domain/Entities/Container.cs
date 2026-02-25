@@ -39,7 +39,7 @@ public class Container : AuditableEntity, IEntity
         CreatedBy = createdBy;
         ChangedBy = changedBy;
     }
-
+    
     public static Container New(
         string name, string code, int typeId, int? productId,
         int? quantity, int? unitId, string? notes, int createdBy)
@@ -48,12 +48,13 @@ public class Container : AuditableEntity, IEntity
             DateTime.Now, null, createdBy, null);
 
     public void UpdateDetails(
-        string name, int typeId, int? productId,
+        string name, int typeId, int? productId, Status status,
         int? quantity, int? unitId, string? notes, int changedBy)
     {
         Name = name;
         TypeId = typeId;
         ProductId = productId;
+        Status = status;
         Quantity = quantity;
         UnitId = unitId;
         Notes = notes;

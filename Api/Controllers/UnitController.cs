@@ -22,7 +22,7 @@ public class UnitController(
         return Ok(result);
     }
 
-    [HttpGet("unitId:int")]
+    [HttpGet("{unitId:int}")]
     public async Task<ActionResult<UnitDto>> GetUnitId(
         [FromRoute] int unitId, 
         CancellationToken cancellationToken)

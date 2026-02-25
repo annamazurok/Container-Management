@@ -10,7 +10,7 @@ public class UpdateUnitDtoValidator :  AbstractValidator<UnitDto>
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Title)
             .NotEmpty()
-            .MinimumLength(2)
+            .MinimumLength(1)
             .MaximumLength(150);
 
         RuleFor(x => x.UnitType)

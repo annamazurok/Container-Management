@@ -96,9 +96,9 @@ public class ContainerController(
         {
             Name = request.Name,
             TypeId = request.TypeId,
-            ProductId = request.ProductId ?? 0,
-            Quantity = request.Quantity ?? 0,
-            UnitId = request.UnitId ?? 0,
+            ProductId = request.ProductId,
+            Quantity = request.Quantity,
+            UnitId = request.UnitId,
             Notes = request.Notes
         };
 
@@ -120,6 +120,7 @@ public class ContainerController(
             Name = request.Name,
             TypeId = request.TypeId,
             ProductId = request.ProductId,
+            Status = request.Status,
             Quantity = request.Quantity,
             UnitId = request.UnitId,
             Notes = request.Notes
