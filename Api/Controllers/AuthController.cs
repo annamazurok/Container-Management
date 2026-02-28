@@ -51,17 +51,16 @@ public class AuthController : ControllerBase
             token => Ok(new AuthResponseDto { Token = token }),
             e => e.ToObjectResult());
     }
-
-
+    
     [Authorize]
     [HttpGet("me")]
     public IActionResult GetCurrentUser()
     {
-        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+        var userId = User.FindFirst("userId")?.Value;          
+        var email = User.FindFirst("email")?.Value;              
         var name = User.FindFirst("name")?.Value;
         var surname = User.FindFirst("surname")?.Value;
-        var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+        var role = User.FindFirst("role")?.Value;               
 
         return Ok(new
         {
