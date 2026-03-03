@@ -54,6 +54,7 @@ public class Container : AuditableEntity, IEntity
         Name = name;
         TypeId = typeId;
         ProductId = productId;
+        Product = null;
         Status = status;
         Quantity = quantity;
         UnitId = unitId;
