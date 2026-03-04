@@ -9,7 +9,7 @@ public record HistoryDto(
     int? Quantity,
     int? UnitId,
     int? ProductId,
-    Status ActionType,
+    string ActionType,
     DateTime FromDate,
     string? Notes,
     int CreatedBy,
@@ -20,7 +20,7 @@ public record HistoryDto(
 {
     public static HistoryDto FromDomainModel(History model)
     => new(model.Id,  model.ContainerId, model.Quantity, 
-        model.UnitId,  model.ProductId, model.ActionType, 
+        model.UnitId,  model.ProductId, model.ActionType.ToString(), 
         model.FromDate, model.Notes, model.CreatedBy, model.CreatedAt,
         model.ChangedBy, model.UpdatedAt);
 }

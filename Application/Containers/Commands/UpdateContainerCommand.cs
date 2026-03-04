@@ -38,7 +38,7 @@ public class UpdateContainerCommandHandler(
         return await container.MatchAsync(
             c => CheckDuplicates(c.Id, request.Name, cancellationToken)
                 .BindAsync(_ => CheckDependencies(request, cancellationToken)
-                    .BindAsync(_ => CreateHistory(c, cancellationToken))
+                    .BindAsync(_ => CreateHistory(c, request, cancellationToken))  
                     .BindAsync(_ => UpdateEntity(request, c, cancellationToken))),
             () => new ContainerNotFoundException(request.Id));
     }
@@ -106,22 +106,28 @@ public class UpdateContainerCommandHandler(
             c => c.Id.Equals(currentContainerId) ? Unit.Default : new ContainerAlreadyExistException(c.Id),
             () => Unit.Default);
     }
-    
+
     private async Task<Either<BaseException, History>> CreateHistory(
-        Container container, CancellationToken cancellationToken)
+    Container container, UpdateContainerCommand request, CancellationToken cancellationToken)  
     {
         try
         {
+            var actionType = request.ProductId == null && container.ProductId != null
+                ? ActionType.Emptied
+                : container.ProductId != request.ProductId
+                    ? ActionType.Filled
+                    : ActionType.Edited;
+
             var history = await historyRepository.CreateAsync(
                 History.New(
                     container.Id,
-                    container.Quantity,
-                    container.UnitId,
-                    container.ProductId,
-                    container.Status,
+                    request.Quantity,
+                    request.UnitId,
+                    request.ProductId,
+                    actionType,
                     container.ChangingDate,
-                    container.Notes,
-                    container.CreatedBy), 
+                    request.Notes,
+                    container.CreatedBy),
                 cancellationToken);
 
             return history;

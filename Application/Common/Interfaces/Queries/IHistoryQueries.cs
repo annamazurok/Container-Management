@@ -8,7 +8,7 @@ public interface IHistoryQueries : IBaseQuery<History>
 {
     Task<IReadOnlyList<History>> GetByContainerAsync(int containerId, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetByProductAsync(int productId, CancellationToken cancellationToken);
-    Task<IReadOnlyList<History>> GetByActionTypeAsync(Status actionType, CancellationToken cancellationToken);
+    Task<IReadOnlyList<History>> GetByActionTypeAsync(ActionType actionType, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetByDateRangeAsync(DateTime fromDate, DateTime toDate, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetByUserAsync(int userId, CancellationToken cancellationToken);
     Task<IReadOnlyList<History>> GetRecentHistoryAsync(int count, CancellationToken cancellationToken);

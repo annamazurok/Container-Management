@@ -9,7 +9,7 @@ public class History : AuditableEntity, IEntity
     public int? Quantity { get; private set; }
     public int? UnitId { get; private set; }
     public int? ProductId { get; private set; }
-    public Status ActionType { get; private set; }
+    public ActionType ActionType { get; private set; }
     public DateTime FromDate { get; private set; }
     public string? Notes { get; private set; }
 
@@ -19,7 +19,7 @@ public class History : AuditableEntity, IEntity
 
     private History(
         int containerId, int? quantity, int? unitId,
-        int? productId, Status actionType, DateTime fromDate, string? notes,
+        int? productId, ActionType actionType, DateTime fromDate, string? notes,
         DateTime createdAt, DateTime? updatedAt, int createdBy, int? changedBy)
     {
         ContainerId = containerId;
@@ -37,7 +37,7 @@ public class History : AuditableEntity, IEntity
 
     public static History New(
         int containerId, int? quantity, int? unitId,
-        int? productId, Status actionType, DateTime fromDate, string? notes, int createdBy)
+        int? productId, ActionType actionType, DateTime fromDate, string? notes, int createdBy)
         => new History(containerId, quantity, unitId, productId, actionType, fromDate, notes,
             DateTime.Now, null, createdBy, null);
 }

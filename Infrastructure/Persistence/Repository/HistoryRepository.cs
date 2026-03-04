@@ -95,7 +95,7 @@ public class HistoryRepository : BaseRepository<History>, IRepository<History>, 
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<History>> GetByActionTypeAsync(Status actionType, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<History>> GetByActionTypeAsync(ActionType actionType, CancellationToken cancellationToken)
     {
         return await _context.Histories
             .AsNoTracking()

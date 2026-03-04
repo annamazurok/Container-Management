@@ -39,7 +39,7 @@ public class HistoryControllerService(
         return result.Select(HistoryDto.FromDomainModel).ToList();
     }
 
-    public async Task<IReadOnlyList<HistoryDto>> GetByActionTypeAsync(Status actionType, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<HistoryDto>> GetByActionTypeAsync(ActionType actionType, CancellationToken cancellationToken)
     {
         var result = await historyQueries.GetByActionTypeAsync(actionType, cancellationToken);
         
