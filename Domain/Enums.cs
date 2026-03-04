@@ -13,3 +13,11 @@ public enum Status
     Maintenance,
     Disposed
 }
+
+public enum ActionType
+{
+    Created,   
+    Filled,    
+    Emptied,   
+    Edited     
+}

@@ -53,7 +53,7 @@ public class HistoryController(
 
     [HttpGet("action-type/{actionType}")]
     public async Task<ActionResult<IReadOnlyList<HistoryDto>>> GetByActionType(
-        Status actionType,
+        ActionType actionType,
         CancellationToken cancellationToken)
     {
         var result = await historyService.GetByActionTypeAsync(actionType, cancellationToken);

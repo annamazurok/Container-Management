@@ -2,6 +2,7 @@
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Common.Interfaces.Services;
+using Domain;
 using Domain.Entities;
 using LanguageExt;
 using MediatR;
@@ -21,6 +22,7 @@ public class CreateContainerCommand : IRequest<Either<BaseException, Container>>
 
 public class CreateContainerCommandHandler(
     IRepository<Container> containerRepository,
+    IRepository<History> historyRepository,
     IContainerQueries containerQueries,
     IContainerTypeQueries containerTypeQueries,
     IProductQueries productQueries,
@@ -90,6 +92,18 @@ public class CreateContainerCommandHandler(
                     request.Notes,
                     userId), 
             cancellationToken);
+
+            await historyRepository.CreateAsync(
+                History.New(
+                    container.Id,
+                    request.Quantity,        
+                    request.UnitId,          
+                    request.ProductId,
+                    ActionType.Created,
+                    DateTime.Now,
+                    request.Notes,          
+                    userId),
+                cancellationToken);
 
             return container;
         }
